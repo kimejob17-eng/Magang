@@ -1,0 +1,245 @@
+/* ============================================================
+   input.css
+   Styles khusus halaman Input Data (tab-input)
+   Komponen: Platform Selector, Form Card, Pagination,
+             YouTube Submenu, Kategori Konten
+   ============================================================ */
+
+/* ----- Platform Selector Button ----- */
+.platform-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    border-radius: 0.75rem;
+    border: 1px solid #e2e8f0;
+    background: #ffffff;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.platform-btn:hover {
+    border-color: #cbd5e1;
+    background: #f8fafc;
+}
+
+.platform-btn.active {
+    border-color: #003EA8;
+    background: #003EA8;
+    color: #ffffff;
+}
+
+.platform-btn.active span {
+    color: #ffffff !important;
+}
+
+.platform-btn.active .icon-logo {
+    color: #ffffff !important;
+}
+
+.platform-btn .check-icon {
+    color: #ffffff;
+}
+
+/* ----- Platform Form Card ----- */
+.platform-form-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+.platform-form-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.platform-form-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 1.75rem;
+}
+
+/* ----- Pagination ----- */
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0 0 0;
+    margin-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.page-btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    border: 1px solid #e2e8f0;
+    background: #ffffff;
+    color: #0f172a;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.page-btn.active {
+    background: #003EA8;
+    color: #ffffff;
+    border-color: #003EA8;
+}
+
+.page-btn:hover:not(.active) {
+    background: #f8fafc;
+}
+
+/* ----- YouTube Submenu Tabs ----- */
+.yt-submenu-wrapper {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 0;
+}
+
+.yt-submenu-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 1.25rem;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    border-radius: 0;
+    margin-bottom: -2px;
+    color: #64748b;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.yt-submenu-btn:hover {
+    color: #ff0000;
+    background: #fff5f5;
+}
+
+.yt-submenu-btn.active {
+    color: #ff0000;
+    border-bottom-color: #ff0000;
+    background: transparent;
+}
+
+/* ----- Kategori Konten ----- */
+.kategori-wrapper {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.kategori-wrapper .kategori-select {
+    flex: 1;
+}
+
+.btn-tambah-kategori {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.6rem 0.9rem;
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    border-radius: 0.5rem;
+    color: #0369a1;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.btn-tambah-kategori:hover {
+    background: #e0f2fe;
+    border-color: #7dd3fc;
+}
+
+/* ----- Platform Selector Sticky Panel & Layout ----- */
+#tab-input .page-header {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 70px; /* Sesuai tinggi topbar (70px) */
+    z-index: 30;
+    background-color: #f8f9fc; /* Sama dengan var(--bg-color), menutup form saat di-scroll */
+    margin-top: 0;
+    margin-bottom: 1.5rem !important;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    transition: all 0.2s ease;
+}
+
+.platform-layout-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 2rem;
+}
+
+.platform-selector-panel {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 180px; /* Tepat di bawah page-header yang sticky (70px + ~90px + gap) */
+    align-self: start;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+    z-index: 10;
+}
+
+/* Scrollbar styles for selector panel */
+.platform-selector-panel::-webkit-scrollbar {
+    width: 4px;
+}
+.platform-selector-panel::-webkit-scrollbar-track {
+    background: transparent;
+}
+.platform-selector-panel::-webkit-scrollbar-thumb {
+    background: #e2e8f0;
+    border-radius: 4px;
+}
+.platform-selector-panel::-webkit-scrollbar-thumb:hover {
+    background: #cbd5e1;
+}
+
+/* Disable sticky positioning on tablet & mobile */
+@media (max-width: 992px) {
+    #tab-input .page-header {
+        position: static !important;
+        top: auto !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        background-color: transparent !important;
+    }
+
+    .platform-layout-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1.5rem !important;
+    }
+
+    .platform-selector-panel {
+        position: static !important;
+        max-height: none !important;
+        overflow-y: visible !important;
+        width: 100%;
+    }
+}
+
