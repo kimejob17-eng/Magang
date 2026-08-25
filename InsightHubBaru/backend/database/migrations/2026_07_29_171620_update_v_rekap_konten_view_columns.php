@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
         $viewSql = "
@@ -19,11 +22,11 @@ return new class extends Migration
                 kf.jenis_konten AS jenis,
                 kf.tautan,
                 kf.tanggal_tayang AS tgl_upload,
-                kf.jangkauan AS reach,
-                kf.total_interaksi AS total_interaksi,
-                kf.suka AS likes,
-                kf.komentar AS comments,
-                kf.dibagikan AS shares,
+                kf.views AS reach,
+                (COALESCE(kf.likes, 0) + COALESCE(kf.comments, 0) + COALESCE(kf.shares, 0)) AS total_interaksi,
+                kf.likes AS likes,
+                kf.comments AS comments,
+                kf.shares AS shares,
                 0 AS followers_plus,
                 0 AS penonton_puncak,
                 kf.diinput_oleh,
@@ -44,11 +47,11 @@ return new class extends Migration
                 ki.jenis_konten AS jenis,
                 ki.tautan,
                 ki.tanggal_tayang AS tgl_upload,
-                ki.jangkauan AS reach,
-                ki.total_interaksi AS total_interaksi,
-                ki.suka AS likes,
-                ki.komentar AS comments,
-                ki.dibagikan AS shares,
+                ki.reach AS reach,
+                (COALESCE(ki.likes, 0) + COALESCE(ki.comments, 0) + COALESCE(ki.shares, 0) + COALESCE(ki.repost, 0)) AS total_interaksi,
+                ki.likes AS likes,
+                ki.comments AS comments,
+                ki.shares AS shares,
                 0 AS followers_plus,
                 0 AS penonton_puncak,
                 ki.diinput_oleh,
@@ -71,9 +74,9 @@ return new class extends Migration
                 kt.tanggal_tayang AS tgl_upload,
                 kt.tayangan AS reach,
                 kt.total_interaksi AS total_interaksi,
-                kt.suka AS likes,
-                kt.komentar AS comments,
-                kt.dibagikan AS shares,
+                kt.likes AS likes,
+                kt.comments AS comments,
+                kt.shares AS shares,
                 0 AS followers_plus,
                 0 AS penonton_puncak,
                 kt.diinput_oleh,
@@ -95,10 +98,10 @@ return new class extends Migration
                 yv.tautan,
                 yv.tanggal_tayang AS tgl_upload,
                 yv.jumlah_penayangan AS reach,
-                (yv.suka + yv.komentar + yv.dibagikan) AS total_interaksi,
-                yv.suka AS likes,
-                yv.komentar AS comments,
-                yv.dibagikan AS shares,
+                (yv.likes + yv.comments + yv.shares) AS total_interaksi,
+                yv.likes AS likes,
+                yv.comments AS comments,
+                yv.shares AS shares,
                 yv.penambahan_subscriber AS followers_plus,
                 0 AS penonton_puncak,
                 yv.diinput_oleh,
@@ -120,10 +123,10 @@ return new class extends Migration
                 ys.tautan,
                 ys.tanggal_tayang AS tgl_upload,
                 ys.jumlah_penayangan AS reach,
-                (ys.suka + ys.komentar + ys.dibagikan) AS total_interaksi,
-                ys.suka AS likes,
-                ys.komentar AS comments,
-                ys.dibagikan AS shares,
+                (ys.likes + ys.comments + ys.shares) AS total_interaksi,
+                ys.likes AS likes,
+                ys.comments AS comments,
+                ys.shares AS shares,
                 ys.penambahan_subscriber AS followers_plus,
                 0 AS penonton_puncak,
                 ys.diinput_oleh,
@@ -145,10 +148,10 @@ return new class extends Migration
                 yl.tautan,
                 yl.tanggal_tayang AS tgl_upload,
                 yl.jumlah_penayangan AS reach,
-                (yl.suka + yl.komentar + yl.dibagikan) AS total_interaksi,
-                yl.suka AS likes,
-                yl.komentar AS comments,
-                yl.dibagikan AS shares,
+                (yl.likes + yl.comments + yl.shares) AS total_interaksi,
+                yl.likes AS likes,
+                yl.comments AS comments,
+                yl.shares AS shares,
                 yl.penambahan_subscriber AS followers_plus,
                 yl.penonton_puncak AS penonton_puncak,
                 yl.diinput_oleh,
@@ -161,6 +164,9 @@ return new class extends Migration
         DB::statement($viewSql);
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         // Revert to simple/basic columns in case of rollback
@@ -171,14 +177,14 @@ return new class extends Migration
                 p.slug AS platform_slug,
                 p.nama AS platform_nama,
                 kk.nama AS kategori,
-                kf.judul,
-                kf.jenis_konten,
+                kf.judul AS judul_konten,
+                kf.jenis_konten AS jenis,
                 kf.tautan,
                 kf.tanggal_tayang AS tgl_upload,
-                kf.jangkauan AS reach,
-                kf.total_interaksi AS total_interaksi,
-                kf.suka, kf.komentar, kf.dibagikan,
-                0 AS penambahan_subscriber,
+                kf.views AS reach,
+                (kf.likes + kf.comments + kf.shares) AS total_interaksi,
+                kf.likes AS likes, kf.comments AS comments, kf.shares AS shares,
+                0 AS followers_plus,
                 0 AS penonton_puncak,
                 kf.diinput_oleh,
                 kf.dibuat_pada
@@ -189,4 +195,3 @@ return new class extends Migration
         DB::statement($viewSql);
     }
 };
-
