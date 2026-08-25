@@ -8,15 +8,15 @@ return new class extends Migration
     public function up(): void
     {
         DB::statement("
-            CREATE OR ALTER VIEW v_rekap_konten AS
+            CREATE OR REPLACE VIEW v_rekap_konten AS
 
             /* =========================================================
                FACEBOOK
                ========================================================= */
             SELECT
-                CAST(CONCAT('FB-', kf.id) AS VARCHAR(50)) AS id_konten,
-                CAST('facebook' AS VARCHAR(50)) AS sumber_tabel,
-                CAST(p.nama AS VARCHAR(50)) AS platform,
+                CAST(CONCAT('FB-', kf.id) AS CHAR(50)) COLLATE utf8mb4_unicode_ci AS id_konten,
+                CAST('facebook' AS CHAR(50)) COLLATE utf8mb4_unicode_ci AS sumber_tabel,
+                CAST(p.nama AS CHAR(50)) COLLATE utf8mb4_unicode_ci AS platform,
                 kk.nama AS kategori,
 
                 kf.judul AS judul_konten,
@@ -60,9 +60,9 @@ return new class extends Migration
                INSTAGRAM
                ========================================================= */
             SELECT
-                CAST(CONCAT('IG-', ki.id) AS VARCHAR(50)) AS id_konten,
-                CAST('instagram' AS VARCHAR(50)) AS sumber_tabel,
-                CAST(p.nama AS VARCHAR(50)) AS platform,
+                CAST(CONCAT('IG-', ki.id) AS CHAR(50)) COLLATE utf8mb4_unicode_ci AS id_konten,
+                CAST('instagram' AS CHAR(50)) COLLATE utf8mb4_unicode_ci AS sumber_tabel,
+                CAST(p.nama AS CHAR(50)) COLLATE utf8mb4_unicode_ci AS platform,
                 kk.nama AS kategori,
 
                 ki.judul AS judul_konten,
@@ -107,9 +107,9 @@ return new class extends Migration
                TIKTOK
                ========================================================= */
             SELECT
-                CAST(CONCAT('TK-', kt.id) AS VARCHAR(50)) AS id_konten,
-                CAST('tiktok' AS VARCHAR(50)) AS sumber_tabel,
-                CAST(p.nama AS VARCHAR(50)) AS platform,
+                CAST(CONCAT('TK-', kt.id) AS CHAR(50)) COLLATE utf8mb4_unicode_ci AS id_konten,
+                CAST('tiktok' AS CHAR(50)) COLLATE utf8mb4_unicode_ci AS sumber_tabel,
+                CAST(p.nama AS CHAR(50)) COLLATE utf8mb4_unicode_ci AS platform,
                 kk.nama AS kategori,
 
                 kt.judul AS judul_konten,
@@ -149,13 +149,13 @@ return new class extends Migration
                YOUTUBE VIDEO
                ========================================================= */
             SELECT
-                CAST(CONCAT('YV-', yv.id) AS VARCHAR(50)) AS id_konten,
-                CAST('youtube_video' AS VARCHAR(50)) AS sumber_tabel,
-                CAST(p.nama AS VARCHAR(50)) AS platform,
+                CAST(CONCAT('YV-', yv.id) AS CHAR(50)) COLLATE utf8mb4_unicode_ci AS id_konten,
+                CAST('youtube_video' AS CHAR(50)) COLLATE utf8mb4_unicode_ci AS sumber_tabel,
+                CAST(p.nama AS CHAR(50)) COLLATE utf8mb4_unicode_ci AS platform,
                 kk.nama AS kategori,
 
                 yv.judul AS judul_konten,
-                CAST('Video' AS VARCHAR(50)) AS jenis,
+                CAST('Video' AS CHAR(50)) COLLATE utf8mb4_unicode_ci AS jenis,
                 yv.tautan,
                 yv.tanggal_tayang AS tgl_upload,
 
@@ -195,13 +195,13 @@ return new class extends Migration
                YOUTUBE SHORTS
                ========================================================= */
             SELECT
-                CAST(CONCAT('YS-', ys.id) AS VARCHAR(50)) AS id_konten,
-                CAST('youtube_shorts' AS VARCHAR(50)) AS sumber_tabel,
-                CAST(p.nama AS VARCHAR(50)) AS platform,
+                CAST(CONCAT('YS-', ys.id) AS CHAR(50)) COLLATE utf8mb4_unicode_ci AS id_konten,
+                CAST('youtube_shorts' AS CHAR(50)) COLLATE utf8mb4_unicode_ci AS sumber_tabel,
+                CAST(p.nama AS CHAR(50)) COLLATE utf8mb4_unicode_ci AS platform,
                 kk.nama AS kategori,
 
                 ys.judul AS judul_konten,
-                CAST('Shorts' AS VARCHAR(50)) AS jenis,
+                CAST('Shorts' AS CHAR(50)) COLLATE utf8mb4_unicode_ci AS jenis,
                 ys.tautan,
                 ys.tanggal_tayang AS tgl_upload,
 
@@ -242,13 +242,13 @@ return new class extends Migration
                YOUTUBE LIVE
                ========================================================= */
             SELECT
-                CAST(CONCAT('YL-', yl.id) AS VARCHAR(50)) AS id_konten,
-                CAST('youtube_live' AS VARCHAR(50)) AS sumber_tabel,
-                CAST(p.nama AS VARCHAR(50)) AS platform,
+                CAST(CONCAT('YL-', yl.id) AS CHAR(50)) COLLATE utf8mb4_unicode_ci AS id_konten,
+                CAST('youtube_live' AS CHAR(50)) COLLATE utf8mb4_unicode_ci AS sumber_tabel,
+                CAST(p.nama AS CHAR(50)) COLLATE utf8mb4_unicode_ci AS platform,
                 kk.nama AS kategori,
 
                 yl.judul AS judul_konten,
-                CAST('Live' AS VARCHAR(50)) AS jenis,
+                CAST('Live' AS CHAR(50)) COLLATE utf8mb4_unicode_ci AS jenis,
                 yl.tautan,
                 yl.tanggal_tayang AS tgl_upload,
 
