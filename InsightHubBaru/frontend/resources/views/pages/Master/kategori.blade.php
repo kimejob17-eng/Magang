@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Master Data Kategori - Analytics Pro</title>
     <!-- Phosphor Icons -->
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}?v={{ time() }}">
     <link rel="stylesheet" href="{{ asset('css/input.css') }}?v={{ time() }}">
@@ -152,38 +152,65 @@
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="sidebar-header">
-            <h2>Analytics Pro</h2>
-            <p>MARKETING DASHBOARD</p>
-        </div>
-        
-        <nav class="sidebar-nav">
-            <a href="{{ route('dashboard') }}" class="nav-item">
-                <i class="ph ph-squares-four"></i> Kembali ke Dashboard
-            </a>
-            <a href="#" class="nav-item active">
-                <i class="ph ph-list-dashes"></i> Kategori Konten
-            </a>
-        </nav>
-    </aside>
+    <!-- Top Navigation Bar -->
+    <header class="topnav">
+        <!-- Brand -->
+        <a href="{{ url('/') }}" class="topnav-brand" style="text-decoration:none; display:flex; align-items:center; padding-left: 0.5rem; flex-shrink: 0;" title="Kembali ke Beranda">
+            <div style="width: 180px; height: 52px; overflow: hidden; position: relative;">
+                <img src="{{ asset('assets/logo-kemendag.png') }}"
+                     alt="Kementerian Perdagangan"
+                     style="width: 195px !important; height: auto !important; max-width: none !important; position: absolute; top: 50%; left: -20px; transform: translateY(-50%); display: block; padding: 0; margin: 0;">
+            </div>
+        </a>
 
-    <!-- Main Content -->
-    <main class="main-content">
-        <!-- Topbar -->
-        <header class="topbar">
-            <div class="search-bar">
+        <!-- Nav Links -->
+        <nav class="topnav-links">
+            <a href="{{ route('dashboard') }}" class="topnav-item">Ringkasan</a>
+            <a href="{{ route('dashboard') }}?tab=analitik" class="topnav-item">Analitik Konten</a>
+            <a href="{{ route('dashboard') }}?tab=input" class="topnav-item">Input Data</a>
+            <a href="{{ route('dashboard') }}?tab=laporan" class="topnav-item">Laporan</a>
+            <a href="#" class="topnav-item active">Kategori Konten</a>
+        </nav>
+
+        <!-- Right -->
+        <div class="topnav-right">
+            <div class="topnav-search">
                 <i class="ph ph-magnifying-glass"></i>
                 <input type="text" id="kategori-search" placeholder="Cari kategori..." autocomplete="off">
-                <span class="search-shortcut">/</span>
+                <span class="topnav-search-shortcut">/</span>
             </div>
-            <div class="topbar-actions">
-                <div class="user-profile">
-                    <img src="{{ auth()->user()->avatar ? asset(auth()->user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&background=003EA8&color=fff&bold=true' }}" alt="{{ auth()->user()->name }}">
-                </div>
+            <div class="topnav-user-group">
+                <a href="{{ route('profile.show') }}" class="topnav-avatar-link" title="{{ auth()->user()->name }}">
+                    @php
+                        $hasAvatar = auth()->user()->avatar && file_exists(public_path(auth()->user()->avatar));
+                        $nameParts = explode(' ', trim(auth()->user()->name));
+                        $initials = count($nameParts) > 1 
+                            ? strtoupper(substr($nameParts[0], 0, 1) . substr($nameParts[1], 0, 1))
+                            : strtoupper(substr(auth()->user()->name, 0, 2));
+                    @endphp
+                    @if($hasAvatar)
+                        <img src="{{ asset(auth()->user()->avatar) }}" alt="{{ auth()->user()->name }}" class="topnav-avatar-img">
+                    @else
+                        <div class="topnav-avatar-initials">
+                            {{ $initials }}
+                        </div>
+                    @endif
+                </a>
+                <button class="topnav-logout-btn"
+                        onclick="event.preventDefault(); document.getElementById('topnav-logout-form').submit();"
+                        title="Logout">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                    <span>Logout</span>
+                </button>
+                <form id="topnav-logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">
+                    @csrf
+                </form>
             </div>
-        </header>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content" style="margin-left:0;">
 
         <div class="dashboard-container active" style="display:block;">
             <div class="page-header" style="align-items: flex-start; margin-bottom: 2rem; display: flex; flex-wrap: wrap; gap: 1rem;">
@@ -245,17 +272,17 @@
                                 <td style="font-weight: 600; color: #1e293b; padding: 1rem 0.5rem;">{{ $kategori->nama_kategori }}</td>
                                 <td style="padding: 1rem 0.5rem;">
                                     @if($kategori->platform == 'facebook')
-                                        <span style="color: #1877f2; font-weight: 600; display:flex; align-items:center; gap:4px;"><i class="ph-fill ph-facebook-logo"></i> Facebook</span>
+                                        <span style="color: #1877f2; font-weight: 600; display:flex; align-items:center; gap:4px;"><i class="fa-brands fa-facebook"></i> Facebook</span>
                                     @elseif($kategori->platform == 'instagram')
-                                        <span style="color: #e1306c; font-weight: 600; display:flex; align-items:center; gap:4px;"><i class="ph-fill ph-instagram-logo"></i> Instagram</span>
+                                        <span style="color: #e1306c; font-weight: 600; display:flex; align-items:center; gap:4px;"><i class="fa-brands fa-instagram"></i> Instagram</span>
                                     @elseif($kategori->platform == 'tiktok')
-                                        <span style="color: #000000; font-weight: 600; display:flex; align-items:center; gap:4px;"><i class="ph-fill ph-tiktok-logo"></i> TikTok</span>
+                                        <span style="color: #000000; font-weight: 600; display:flex; align-items:center; gap:4px;"><i class="fa-brands fa-tiktok"></i> TikTok</span>
                                     @elseif($kategori->platform == 'yt-live')
-                                        <span style="color: #ff0000; font-weight: 600; display:flex; align-items:center; gap:4px;"><i class="ph-fill ph-youtube-logo"></i> YouTube Live</span>
+                                        <span style="color: #ff0000; font-weight: 600; display:flex; align-items:center; gap:4px;"><i class="fa-brands fa-youtube"></i> YouTube Live</span>
                                     @elseif($kategori->platform == 'yt-video')
-                                        <span style="color: #ff0000; font-weight: 600; display:flex; align-items:center; gap:4px;"><i class="ph-fill ph-youtube-logo"></i> YouTube Video</span>
+                                        <span style="color: #ff0000; font-weight: 600; display:flex; align-items:center; gap:4px;"><i class="fa-brands fa-youtube"></i> YouTube Video</span>
                                     @elseif($kategori->platform == 'yt-shorts')
-                                        <span style="color: #ff0000; font-weight: 600; display:flex; align-items:center; gap:4px;"><i class="ph-fill ph-youtube-logo"></i> YouTube Shorts</span>
+                                        <span style="color: #ff0000; font-weight: 600; display:flex; align-items:center; gap:4px;"><i class="fa-brands fa-youtube"></i> YouTube Shorts</span>
                                     @else
                                         {{ ucfirst($kategori->platform) }}
                                     @endif
@@ -473,6 +500,9 @@
             </script>
 
         </div>
+
+        <!-- Global Footer -->
+        @include('layouts.footer')
     </main>
 </body>
 </html>

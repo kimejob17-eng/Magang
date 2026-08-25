@@ -13,7 +13,7 @@ class KontenInstagram extends Model
 
     protected $fillable = [
         'kategori_id', 'judul', 'jenis_konten', 'tautan', 'tanggal_tayang',
-        'jangkauan', 'total_interaksi', 'suka', 'komentar', 'dibagikan',
+        'reach', 'views', 'repost', 'likes', 'comments', 'shares',
         'diinput_oleh',
     ];
 

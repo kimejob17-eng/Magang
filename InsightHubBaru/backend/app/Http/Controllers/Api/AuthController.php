@@ -10,40 +10,6 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    /**
-     * POST /api/register
-     * Registrasi pengguna baru dan berikan Token Bearer.
-     */
-    public function register(Request $request)
-    {
-        $validated = $request->validate([
-            'name'     => 'required|string|max:150',
-            'email'    => 'required|email|unique:users,email',
-            'password' => 'required|min:8|confirmed',
-        ]);
-
-        $user = User::create([
-            'name'     => $validated['name'],
-            'email'    => $validated['email'],
-            'password' => Hash::make($validated['password']),
-            'role'     => 'viewer', // default role
-        ]);
-
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()->json([
-            'success'      => true,
-            'message'      => 'Registrasi berhasil',
-            'access_token' => $token,
-            'token_type'   => 'Bearer',
-            'user'         => [
-                'id'    => $user->id,
-                'name'  => $user->name,
-                'email' => $user->email,
-                'role'  => $user->role,
-            ]
-        ], 201);
-    }
 
     /**
      * POST /api/login
@@ -54,6 +20,7 @@ class AuthController extends Controller
         $validated = $request->validate([
             'email'    => 'required|email',
             'password' => 'required',
+            'role'     => 'nullable|string|in:user,admin',
         ]);
 
         $user = User::where('email', $validated['email'])->first();
@@ -65,13 +32,22 @@ class AuthController extends Controller
             ], 401);
         }
 
+        // Validasi role jika dikirim oleh client
+        if (!empty($validated['role']) && strtolower($user->role) !== strtolower($validated['role'])) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Role akun tidak sesuai.'
+            ], 403);
+        }
+
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
             'success'      => true,
-            'message'      => 'Login berhasil',
+            'message'      => $user->must_change_password ? 'Login berhasil. Anda wajib mengganti kata sandi.' : 'Login berhasil',
             'access_token' => $token,
             'token_type'   => 'Bearer',
+            'require_password_change' => $user->must_change_password,
             'user'         => [
                 'id'    => $user->id,
                 'name'  => $user->name,

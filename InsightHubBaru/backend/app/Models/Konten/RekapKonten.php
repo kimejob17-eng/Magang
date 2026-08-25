@@ -21,4 +21,8 @@ class RekapKonten extends Model
     public $timestamps = false;
 
     protected $guarded = ['*']; // cegah mass-assignment / create() tak sengaja
+
+    protected $casts = [
+    'tgl_upload' => 'date',
+];
 }

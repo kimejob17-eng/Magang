@@ -7,20 +7,36 @@
     <meta charset="UTF-8">
     <title>Laporan Performa Konten</title>
     <style>
+        @page {
+            margin: 40px 40px 60px 40px;
+        }
         body, table, th, td, div, span, p, a {
             font-family: 'Helvetica', Arial, sans-serif !important;
             color: #1e293b;
         }
+        footer {
+            position: fixed;
+            bottom: -30px;
+            left: 0px;
+            right: 0px;
+            height: 20px;
+            font-size: 10px;
+            color: #64748b;
+            text-align: center;
+            padding-top: 8px;
+        }
         .watermark {
             position: fixed;
-            top: 40%;
-            left: 5%;
-            font-size: 50px;
+            top: 45%;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 140px;
             color: rgba(226, 232, 240, 0.4);
-            transform: rotate(-35deg);
+            transform: rotate(-30deg);
             z-index: -1000;
-            font-weight: 800;
-            letter-spacing: 12px;
+            font-weight: 900;
+            letter-spacing: 25px;
         }
         /* Top Banner */
         .banner-container {
@@ -136,30 +152,37 @@
             width: 100%;
             margin-bottom: 25px;
             border-collapse: separate;
-            border-spacing: 8px 0;
-            margin-left: -8px;
-            margin-right: -8px;
+            border-spacing: 10px 0;
+            margin-left: -10px;
+            margin-right: -10px;
             table-layout: fixed;
         }
         .card-td {
             background-color: #ffffff;
             border: 1px solid #e2e8f0;
             border-radius: 8px;
-            padding: 12px;
-            vertical-align: top;
+            padding: 15px 12px;
+            vertical-align: middle;
+            height: 65px;
+            overflow: hidden;
         }
+        .card-bg-1 { background-color: #f8fafc; border-color: #cbd5e1; }
+        .card-bg-2 { background-color: #f0fdf4; border-color: #bbf7d0; }
+        .card-bg-3 { background-color: #faf5ff; border-color: #e9d5ff; }
+        .card-bg-4 { background-color: #fff7ed; border-color: #fed7aa; }
+        
         .card-td.card-primary {
             background-color: #2563eb;
             border-color: #2563eb;
         }
         .card-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 16px;
+            width: 36px;
+            height: 36px;
+            border-radius: 18px;
             text-align: center;
             display: inline-block;
         }
-        .c-icon-1 { background-color: #dbeafe; color: #2563eb; }
+        .c-icon-1 { background-color: #e2e8f0; color: #334155; }
         .c-icon-2 { background-color: #dcfce7; color: #16a34a; }
         .c-icon-3 { background-color: #f3e8ff; color: #9333ea; }
         .c-icon-4 { border: 2px solid rgba(255, 255, 255, 0.4); box-sizing: border-box; }
@@ -170,6 +193,8 @@
             color: #64748b;
             margin-bottom: 6px;
             text-transform: uppercase;
+            line-height: 1.2;
+            word-wrap: break-word;
         }
         .card-primary .card-title {
             color: #dbeafe;
@@ -193,15 +218,14 @@
 
         /* Data Table */
         .data-table-container {
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            overflow: hidden;
             margin-bottom: 20px;
         }
         .data-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 9px;
+            border: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
         }
         .data-table th {
             background-color: #2563eb;
@@ -261,7 +285,16 @@
     </style>
 </head>
 <body>
-    <div class="watermark">INSIGHTHUB</div>
+    <footer>SOVIE - Social Media View</footer>
+    <div class="watermark">SOVIE</div>
+
+    <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 15px;">
+        <tr>
+            <td style="background-color: #1e293b; border-radius: 8px; padding: 12px 18px;">
+                <img src="data:image/png;base64,<?php echo e(base64_encode(file_get_contents(public_path('assets/loogo.png')))); ?>" width="130" alt="Logo Kementerian">
+            </td>
+        </tr>
+    </table>
 
     <div class="banner-container">
         <table width="100%" cellpadding="0" cellspacing="0" border="0">
@@ -270,7 +303,7 @@
                     <span class="badge">EXECUTIVE REPORT</span> 
                     <span class="badge-id">ID: <?php echo e(date('ymd-Hi', $generatedTime)); ?></span><br>
                     <h1 class="title">LAPORAN PERFORMA KONTEN</h1>
-                    <span class="subtitle">InsightHub AI Analytics</span>
+                    <span class="subtitle">SOVIE AI Analytics</span>
                 </td>
                 <td align="right" style="vertical-align: middle;">
                     <div class="date-box">
@@ -327,7 +360,7 @@
     
     <table class="cards-container" cellpadding="0" cellspacing="0" border="0">
         <tr>
-            <td class="card-td" width="25%">
+            <td class="card-td card-bg-1" width="20%">
                 <table width="100%" cellpadding="0" cellspacing="0" border="0">
                     <tr>
                         <td width="45px"><div class="card-icon c-icon-1"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M2ViIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTE0IDJINmEyIDIgMCAwIDAtMiAydjE2YTIgMiAwIDAgMCAyIDJoMTJhMiAyIDAgMCAwIDItMlY4eiI+PC9wYXRoPjxwb2x5bGluZSBwb2ludHM9IjE0IDIgMTQgOCAyMCA4Ij48L3BvbHlsaW5lPjwvc3ZnPg==" width="20" height="20" style="margin-top: 10px;"></div></td>
@@ -338,7 +371,7 @@
                     </tr>
                 </table>
             </td>
-            <td class="card-td" width="25%">
+            <td class="card-td card-bg-2" width="20%">
                 <table width="100%" cellpadding="0" cellspacing="0" border="0">
                     <tr>
                         <td width="45px"><div class="card-icon c-icon-2"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMTZhMzRhIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTE3IDIxdi0yYTQgNCAwIDAgMC00LTRINWE0IDQgMCAwIDAtNCA0djIiPjwvcGF0aD48Y2lyY2xlIGN4PSI5IiBjeT0iNyIgcj0iNCI+PC9jaXJjbGU+PHBhdGggZD0iTTIzIDIxdi0yYTQgNCAwIDAgMC0zLTMuODciPjwvcGF0aD48cGF0aCBkPSJNMTYgMy4xM2E0IDQgMCAwIDEgMCA3Ljc1Ij48L3BhdGg+PC9zdmc+" width="20" height="20" style="margin-top: 10px;"></div></td>
@@ -349,7 +382,7 @@
                     </tr>
                 </table>
             </td>
-            <td class="card-td" width="25%">
+            <td class="card-td card-bg-3" width="20%">
                 <table width="100%" cellpadding="0" cellspacing="0" border="0">
                     <tr>
                         <td width="45px"><div class="card-icon c-icon-3"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOTMzM2VhIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBvbHlsaW5lIHBvaW50cz0iMjMgNiAxMy41IDE1LjUgOC41IDEwLjUgMSAxOCI+PC9wb2x5bGluZT48cG9seWxpbmUgcG9pbnRzPSIxNyA2IDIzIDYgMjMgMTIiPjwvcG9seWxpbmU+PC9zdmc+" width="20" height="20" style="margin-top: 10px;"></div></td>
@@ -361,7 +394,18 @@
                     </tr>
                 </table>
             </td>
-            <td class="card-td card-primary" width="25%">
+            <td class="card-td card-bg-4" width="20%">
+                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                        <td width="45px"><div class="card-icon" style="background-color: #ffedd5; color: #ea580c;"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZWE1ODBjIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTE2IDIxdi0yYTQgNCAwIDAgMC00LTRINmE0IDQgMCAwIDAtNCA0djIiPjwvcGF0aD48Y2lyY2xlIGN4PSI5IiBjeT0iNyIgcj0iNCI+PC9jaXJjbGU+PGxpbmUgeDE9IjE5IiB5MT0iOCIgeDI9IjE5IiB5Mj0iMTQiPjwvbGluZT48bGluZSB4MT0iMjIiIHkxPSIxMSIgeDI9IjE2IiB5Mj0iMTEiPjwvbGluZT48L3N2Zz4=" width="20" height="20" style="margin-top: 10px;"></div></td>
+                        <td>
+                            <div class="card-title">TOTAL FOLLOWERS</div>
+                            <div class="card-value"><?php echo e(number_format($laporanAgg['total_followers'])); ?> <br><span class="card-unit">Followers</span></div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td class="card-td card-primary" width="20%">
                 <table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0">
                     <tr>
                         <td align="center" valign="middle">
@@ -388,14 +432,16 @@
             <thead>
                 <tr>
                     <th class="center border-right" width="4%">No</th>
-                    <th class="center border-right" width="11%">Tgl Upload</th>
-                    <th class="border-right" width="12%">Platform</th>
-                    <th class="border-right" width="12%">Jenis</th>
-                    <th class="border-right" width="30%">Judul Konten</th>
+                    <th class="center border-right" width="9%">Tgl Upload</th>
+                    <th class="border-right" width="10%">Platform</th>
+                    <th class="border-right" width="9%">Jenis</th>
+                    <th class="border-right" width="29%">Judul Konten</th>
                     <th class="center border-right" width="7%">Reach</th>
-                    <th class="center border-right" width="7%">Likes</th>
-                    <th class="center border-right" width="7%">Comm</th>
-                    <th class="center" width="7%">Share</th>
+                    <th class="center border-right" width="7%">Views</th>
+                    <th class="center border-right" width="7%">Saves</th>
+                    <th class="center border-right" width="6%">Likes</th>
+                    <th class="center border-right" width="6%">Comments</th>
+                    <th class="center" width="6%">Share</th>
                 </tr>
             </thead>
             <tbody>
@@ -407,6 +453,8 @@
                     <td class="center"><span class="badge-jenis"><?php echo e($row->jenis); ?></span></td>
                     <td class="center"><?php echo e(\Illuminate\Support\Str::limit($row->judul_konten, 30)); ?></td>
                     <td class="center"><?php echo e(number_format($row->reach)); ?></td>
+                    <td class="center"><?php echo e(number_format($row->reach)); ?></td>
+                    <td class="center">0</td>
                     <td class="center"><?php echo e(number_format($row->likes)); ?></td>
                     <td class="center"><?php echo e(number_format($row->comments)); ?></td>
                     <td class="center"><?php echo e(number_format($row->shares)); ?></td>
@@ -417,7 +465,7 @@
     </div>
 
     <div class="footer">
-        Dicetak melalui <strong>InsightHub AI Analytics</strong> pada <?php echo e(date('d F Y H:i:s', $generatedTime)); ?>
+        Dicetak melalui <strong>SOVIE AI Analytics</strong> pada <?php echo e(date('d F Y H:i:s', $generatedTime)); ?>
 
     </div>
 </body>

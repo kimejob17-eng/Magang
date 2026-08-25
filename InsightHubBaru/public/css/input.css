@@ -41,6 +41,68 @@
     color: #ffffff;
 }
 
+/* Pastel Platform Icons styling */
+.platform-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.platform-icon-wrapper svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Facebook (inactive/active) */
+.platform-btn:not(.active) .fb-icon-wrap {
+    background-color: #e3edfd;
+    color: #1877f2;
+}
+.platform-btn.active .fb-icon-wrap {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+
+/* Instagram (inactive/active) */
+.platform-btn:not(.active) .ig-icon-wrap {
+    background-color: #fce7f0;
+    color: #e1306c;
+}
+.platform-btn.active .ig-icon-wrap {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+.platform-btn.active .ig-icon-wrap .icon-logo {
+    stroke: #ffffff !important;
+}
+
+/* TikTok (inactive/active) */
+.platform-btn:not(.active) .tt-icon-wrap {
+    background-color: #f1f5f9;
+    color: #010101;
+}
+.platform-btn.active .tt-icon-wrap {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+.platform-btn.active .tt-icon-wrap .icon-logo {
+    stroke: #ffffff !important;
+}
+
+/* YouTube (inactive/active) */
+.platform-btn:not(.active) .yt-icon-wrap {
+    background-color: #fde2e2;
+    color: #ff0000;
+}
+.platform-btn.active .yt-icon-wrap {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+
 /* ----- Platform Form Card ----- */
 .platform-form-card {
     background: #ffffff;

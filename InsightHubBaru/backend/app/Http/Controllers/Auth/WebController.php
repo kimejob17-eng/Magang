@@ -18,43 +18,28 @@ class WebController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email'    => 'required|email',
+            'username' => 'required|string',
             'password' => 'required',
         ]);
 
         if (Auth::attempt(
-            ['email' => $credentials['email'], 'password' => $credentials['password']],
+            ['username' => $credentials['username'], 'password' => $credentials['password']],
             $request->boolean('remember')
         )) {
+            $user = Auth::user();
+
             $request->session()->regenerate();
+            
+            if ($user->must_change_password) {
+                return redirect()->route('password.change.show');
+            }
+            
             return redirect()->intended('/dashboard');
         }
 
-        return back()->with('error', 'Email atau kata sandi salah.')->withInput($request->only('email'));
+        return back()->with('error', 'Role, Username, atau kata sandi salah.')->withInput($request->only('username'));
     }
 
-    public function showRegister()
-    {
-        return view('auth.register');
-    }
-
-    public function register(Request $request)
-    {
-        $data = $request->validate([
-            'name'     => 'required|string|max:150',
-            'email'    => 'required|email|unique:users,email',
-            'password' => 'required|min:8|confirmed',
-        ]);
-
-        User::create([
-            'name'         => $data['name'],
-            'email'        => $data['email'],
-            'password'     => Hash::make($data['password']),
-            'role'         => 'User',
-        ]);
-
-        return redirect()->route('login')->with('success', 'Akun berhasil dibuat, silakan masuk.');
-    }
 
     public function logout(Request $request)
     {

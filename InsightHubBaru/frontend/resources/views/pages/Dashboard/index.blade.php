@@ -1,119 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analytics Pro - Marketing Dashboard</title>
-    <!-- Phosphor Icons -->
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}?v={{ time() }}">
-    <link rel="stylesheet" href="{{ asset('css/input.css') }}?v={{ time() }}">
-</head>
-<body>
+@extends('layouts.app')
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="sidebar-header">
-            <h2>Analytics Pro</h2>
-            <p>MARKETING DASHBOARD</p>
-        </div>
-        
-        <nav class="sidebar-nav">
-            <a class="nav-item active" onclick="switchTab('ringkasan', this)">
-                <i class="ph ph-squares-four"></i> Ringkasan
-            </a>
-            <a class="nav-item" onclick="switchTab('analitik', this)">
-                <i class="ph ph-chart-line-up"></i> Analitik Konten
-            </a>
-            <a class="nav-item" onclick="switchTab('input', this)">
-                <i class="ph ph-plus-square"></i> Input Data
-            </a>
-            <a class="nav-item" onclick="switchTab('laporan', this)">
-                <i class="ph ph-file-text"></i> Laporan
-            </a>
-            <a class="nav-item" style="margin-top: 1rem;" href="{{ route('profile.show') }}">
-                <i class="ph ph-gear"></i> Profile
-            </a>
-        </nav>
-        
-        <div class="sidebar-footer">
-            <a class="user-logout-card" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" title="Logout">
-                @if(auth()->user()->avatar)
-                    <img src="{{ asset(auth()->user()->avatar) }}" alt="Logout" class="user-card-avatar">
-                @else
-                    <div class="user-card-avatar-initials">
-                        {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
-                    </div>
-                @endif
-                <span class="user-card-logout-text">Logout</span>
-            </a>
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                @csrf
-            </form>
-        </div>
-    </aside>
+@section('content')
+    <!-- Tab: Ringkasan -->
+    @include('pages.Dashboard.ringkasan')
 
-    <!-- Main Content -->
-    <main class="main-content">
-        
-        <!-- Topbar -->
-        <header class="topbar">
-            <div class="search-bar">
-                <i class="ph ph-magnifying-glass"></i>
-                <input type="text" id="global-search" placeholder="Cari data atau laporan..." autocomplete="off">
-                <span class="search-shortcut">/</span>
-            </div>
-            
-            <style>
-                .header-user-profile {
-                    display: flex;
-                    align-items: center;
-                    gap: 0.75rem;
-                    text-decoration: none;
-                    cursor: pointer;
-                }
-                .header-user-profile .user-name {
-                    font-size: 0.95rem;
-                    font-weight: 700;
-                    color: #0f172a;
-                    line-height: 1.2;
-                    transition: color 0.2s ease-in-out;
-                }
-                .header-user-profile:hover .user-name {
-                    color: #2563eb;
-                }
-                .header-user-profile img {
-                    width: 36px;
-                    height: 36px;
-                    border-radius: 50%;
-                    object-fit: cover;
-                }
-            </style>
-            <div class="topbar-actions">
-                <a href="{{ route('profile.show') }}" class="header-user-profile">
-                    <img src="{{ auth()->user()->avatar ? asset(auth()->user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&background=003EA8&color=fff&bold=true' }}" alt="{{ auth()->user()->name }}">
-                    <div style="text-align: left;">
-                        <div class="user-name">{{ auth()->user()->name }}</div>
-                    </div>
-                </a>
-            </div>
-        </header>
+    <!-- Tab: Analitik Konten -->
+    @include('pages.Dashboard.analitik')
 
-        <!-- Tab: Ringkasan -->
-        @include('pages.Dashboard.ringkasan')
+    <!-- Tab: Input Data -->
+    @if(auth()->check() && in_array(auth()->user()->role, ['super-admin', 'admin']))
+    @include('pages.Input.input')
+    @endif
 
-        <!-- Tab: Analitik Konten -->
-        @include('pages.Dashboard.analitik')
+    <!-- Tab: Laporan -->
+    @include('pages.Report.laporan')
+@endsection
 
-        <!-- Tab: Input Data -->
-        @include('pages.Input.input')
-
-        <!-- Tab: Laporan -->
-        @include('pages.Report.laporan')
-
-    </main>
-
+@push('scripts')
     <!-- JavaScript for Tab Switching -->
     <script>
         function switchTab(tabId, element) {
@@ -121,15 +24,19 @@
             document.querySelectorAll('.dashboard-container').forEach(tab => {
                 tab.classList.remove('active');
             });
-            
+
             // Remove active class from all nav items
-            document.querySelectorAll('.nav-item').forEach(nav => {
+            document.querySelectorAll('.topnav-item').forEach(nav => {
                 nav.classList.remove('active');
             });
-            
+
             // Add active class to selected tab and nav item
-            document.getElementById('tab-' + tabId).classList.add('active');
+            const targetTab = document.getElementById('tab-' + tabId);
+            if(targetTab) targetTab.classList.add('active');
             if (element) element.classList.add('active');
+
+            // Persist active tab to sessionStorage
+            sessionStorage.setItem('dashboard_active_tab', tabId);
 
             // Clear search when switching tabs
             const globalSearch = document.getElementById('global-search');
@@ -142,16 +49,20 @@
             }
         }
 
-        // ---- Auto switch tab based on URL query param ----
+        // ---- Restore active tab: URL param > sessionStorage > default (ringkasan) ----
         (function () {
             var urlParams = new URLSearchParams(window.location.search);
-            var tab = urlParams.get('tab');
-            if (tab) {
-                var navEl = document.querySelector('.nav-item[onclick*="' + tab + '"]');
-                switchTab(tab, navEl);
-                // Scroll to top of content smoothly
-                window.scrollTo({ top: 0 });
+            var tab = urlParams.get('tab') || sessionStorage.getItem('dashboard_active_tab') || 'ringkasan';
+            var navEl = document.querySelector('.topnav-item[data-tab="' + tab + '"]');
+            
+            // If the tab link doesn't exist (e.g. hidden due to permissions), fallback to ringkasan
+            if (!navEl) {
+                tab = 'ringkasan';
+                navEl = document.querySelector('.topnav-item[data-tab="' + tab + '"]');
             }
+
+            switchTab(tab, navEl);
+            window.scrollTo({ top: 0 });
         })();
 
         // ---- Global Search Filter ----
@@ -194,5 +105,4 @@
             }
         });
     </script>
-</body>
-</html>
+@endpush

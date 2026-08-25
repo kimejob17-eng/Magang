@@ -13,7 +13,7 @@ class KontenFacebook extends Model
 
     protected $fillable = [
         'kategori_id', 'judul', 'jenis_konten', 'tautan', 'tanggal_tayang',
-        'tayangan', 'total_interaksi', 'suka', 'komentar', 'dibagikan',
+        'views', 'saves', 'likes', 'comments', 'shares',
         'diinput_oleh',
     ];
 

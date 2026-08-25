@@ -6,8 +6,8 @@
 /* ── PROFILE PAGE WRAPPER ─────────────────────────────────── */
 .profile-page {
   padding: 2rem 2.5rem 3.5rem;
-  max-width: 1300px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: 100%;
 }
 
 /* ── PROFILE HERO HEADER ──────────────────────────────────── */
@@ -156,6 +156,7 @@
 .hero-actions {
   flex-shrink: 0;
   padding-top: 0.75rem;
+  margin-left: auto;
 }
 
 /* ── ALERTS (Alert success & danger) ──────────────────────── */
@@ -217,19 +218,22 @@
 /* ── TWO-COLUMN GRID ──────────────────────────────────────── */
 .profile-grid {
   display: grid;
-  grid-template-columns: 1.6fr 1fr;
+  grid-template-columns: 65fr 35fr;
   gap: 2rem;
-  align-items: start;
+  align-items: stretch;
 }
 
 /* ── PROFILE CARD ─────────────────────────────────────────── */
 .profile-card {
   background: var(--white);
-  border-radius: 1.25rem;
-  padding: 2.25rem 2rem;
-  box-shadow: 0 8px 24px -10 rgba(15, 23, 42, 0.06);
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
   border: 1px solid var(--border);
-  transition: border-color 0.3s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .profile-card:hover {
@@ -256,17 +260,18 @@
 }
 
 .card-title {
-  font-size: 1.15rem;
-  font-weight: 700;
+  font-size: 1.25rem;
+  font-weight: 800;
   color: var(--text-dark);
   letter-spacing: -0.3px;
   margin-bottom: 0.25rem;
 }
 
 .card-desc {
-  font-size: 0.82rem;
+  font-size: 0.85rem;
   color: var(--text-gray);
-  line-height: 1.4;
+  line-height: 1.5;
+  font-weight: 400;
 }
 
 /* ── FORM ELEMENTS ────────────────────────────────────────── */
@@ -511,7 +516,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.85rem 1.6rem;
+  padding: 0.75rem 1.25rem;
   background: var(--primary);
   color: var(--white);
   border: none;
@@ -521,7 +526,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 14px rgba(0, 62, 168, 0.25);
+  box-shadow: 0 4px 12px rgba(0, 62, 168, 0.2);
   letter-spacing: 0.01em;
 }
 
@@ -559,7 +564,7 @@
 
 /* Logout Section & Button styling */
 .logout-section {
-  margin-top: 2rem;
+  margin-top: auto;
   padding-top: 1.5rem;
   border-top: 1px solid #f1f5f9;
 }
@@ -730,7 +735,7 @@
 /* ── RESPONSIVE RESPONSIVENESS ────────────────────────────── */
 @media (max-width: 1024px) {
   .profile-grid {
-    grid-template-columns: 1.4fr 1fr;
+    grid-template-columns: 60fr 40fr;
     gap: 1.5rem;
   }
 }

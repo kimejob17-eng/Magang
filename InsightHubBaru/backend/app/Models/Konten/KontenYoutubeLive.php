@@ -14,7 +14,7 @@ class KontenYoutubeLive extends Model
     protected $fillable = [
         'kategori_id', 'judul', 'tautan', 'tanggal_tayang',
         'jumlah_penayangan', 'penambahan_subscriber', 'penonton_puncak',
-        'suka', 'komentar', 'dibagikan', 'diinput_oleh',
+        'likes', 'comments', 'shares', 'diinput_oleh',
     ];
 
     protected $casts = ['tanggal_tayang' => 'date'];

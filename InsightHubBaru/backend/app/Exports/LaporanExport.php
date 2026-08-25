@@ -79,11 +79,25 @@ class LaporanExport implements FromView, ShouldAutoSize, WithStyles, WithTitle
         $query->orderBy($lapSort, $lapDir);
         $data = $query->get();
 
+        // ---- Hardcoded Followers Logic (Sync with Dashboard JS) ----
+        $followerAccounts = [
+            'all'       => 64800,
+            'instagram' => 40308,
+            'tiktok'    => 2217,
+            'facebook'  => 5375,
+            'yt-live'   => 16900,
+            'yt-video'  => 16900,
+            'yt-shorts' => 16900,
+            'youtube'   => 16900,
+        ];
+        $totalFollowers = $followerAccounts[$lapPlatform] ?? 64800;
+
         // ---- Agregat (nama kolom VIEW: reach, likes, comments, shares) ----
         $laporanAgg = [
-            'total_konten' => $data->count(),
-            'total_reach'  => $data->sum('reach'),
-            'total_eng'    => $data->sum('likes') + $data->sum('comments') + $data->sum('shares'),
+            'total_konten'    => $data->count(),
+            'total_reach'     => $data->sum('reach'),
+            'total_eng'       => $data->sum('likes') + $data->sum('comments') + $data->sum('shares') + $data->where('sumber_tabel', 'youtube_shorts')->sum('repost'),
+            'total_followers' => $totalFollowers,
         ];
         $laporanAgg['avg_er'] = $laporanAgg['total_reach'] > 0
             ? ($laporanAgg['total_eng'] / $laporanAgg['total_reach']) * 100

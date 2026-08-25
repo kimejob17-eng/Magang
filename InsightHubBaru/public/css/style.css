@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 :root {
-  --primary-color: #2646c5;
-  --primary-hover: #1c369d;
+  --primary-color: #003EA8;
+  --primary-hover: #002d7a;
   --bg-color: #ffffff;
   --footer-bg: #f8f9fc;
   --text-main: #1e293b;
@@ -125,7 +125,8 @@ ul {
   font-size: 1.05rem;
 }
 
-.nav-links a:hover, .nav-links a.active {
+.nav-links a:hover,
+.nav-links a.active {
   color: var(--primary-color);
 }
 
@@ -141,7 +142,8 @@ ul {
   transition: var(--transition);
 }
 
-.nav-links a:hover::after, .nav-links a.active::after {
+.nav-links a:hover::after,
+.nav-links a.active::after {
   width: 100%;
 }
 
@@ -161,23 +163,82 @@ ul {
   text-decoration: underline;
 }
 
-/* Hero Section */
+/* Animations */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ═══════════════════════════════════════
+   HERO SECTION 
+   Target: Full viewport minus navbar, gradasi halus natural
+   ═══════════════════════════════════════ */
 .hero {
   display: flex;
   align-items: center;
-  padding: 8rem 0;
-  min-height: calc(100vh - 90px);
+  width: 100%;
+  
+  /* Gunakan aspect-ratio agar tinggi hero selalu proporsional mengikuti rasio foto (landscape). 
+     Ini mencegah pemotongan paksa (cropping) yang berlebihan pada gambar. */
+  aspect-ratio: 16 / 8.5; 
+  min-height: 500px;
+  max-height: 900px;
+  overflow: hidden;
+
+  /* Overlay gradasi biru yang lebih natural (intensitas dikurangi) + foto gedung full-width */
+  background-image: 
+    linear-gradient(
+      to right,
+      rgba(8, 35, 110, 0.88) 0%,
+      rgba(12, 45, 125, 0.75) 20%,
+      rgba(20, 60, 145, 0.45) 40%,
+      rgba(20, 60, 145, 0.15) 60%,
+      rgba(20, 60, 145, 0) 80%
+    ),
+    url('../assets/gedung-ppejp.jpeg');
+    
+  /* Cover agar memenuhi layar, center bottom agar aspal/pagar/papan di bawah TIDAK pernah terpotong */
+  background-size: cover;
+  background-position: center bottom;
+  background-repeat: no-repeat;
 }
 
 .hero-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: center;
-  gap: 5rem;
   width: 100%;
+  /* Batasi lebar maksimal konten agar teks tidak melebar ke ujung layar di ultrawide */
+  max-width: 1440px; 
+  margin: 0 auto;
+  /* Digeser sedikit ke kiri agar komposisi lebih proporsional dengan background */
+  padding-left: clamp(1.5rem, 3vw, 3rem);
+  padding-right: 3rem;
 }
 
 .hero-content {
+  width: 100%;
+  max-width: 600px; /* Batasi lebar teks di area kiri yang gelap */
+  position: relative;
+  z-index: 3;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -186,100 +247,317 @@ ul {
 .badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  background-color: #eef2ff;
-  color: var(--primary-color);
-  padding: 0.5rem 1.15rem;
+  background-color: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.9);
+  padding: 0.3rem 1rem;
   border-radius: 2rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin-bottom: 2rem;
-  border: 1px solid rgba(38, 70, 197, 0.15);
+  font-size: 0.78rem;
+  font-weight: 500;
+  margin-bottom: 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  letter-spacing: 0.04em;
+  animation: fadeUp 0.7s ease-out forwards;
+  opacity: 0;
 }
 
 .hero-title {
-  font-size: 3.5rem;
-  line-height: 1.25;
+  /* clamp: min 3rem, preferred 5vw, max 4.5rem — proporsional di semua layar */
+  font-size: clamp(3rem, 5vw, 4.5rem);
+  line-height: 1;
   font-weight: 800;
-  margin-bottom: 1.75rem;
-  color: var(--text-main);
-  letter-spacing: -1.5px;
+  margin-bottom: 0.15rem;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  animation: fadeUp 0.7s ease-out 0.08s forwards;
+  opacity: 0;
 }
 
-.hero-title span {
-  color: var(--primary-color);
+.hero-subtitle-large {
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  line-height: 1.4;
+  margin-bottom: 1.25rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  animation: fadeUp 0.7s ease-out 0.16s forwards;
+  opacity: 0;
+}
+
+.hero-divider {
+  width: 50px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.5);
+  margin-bottom: 1.25rem;
+  border-radius: 2px;
+  animation: fadeUp 0.7s ease-out 0.24s forwards;
+  opacity: 0;
 }
 
 .hero-subtitle {
-  font-size: 1.15rem;
-  color: var(--text-muted);
-  margin-bottom: 2.5rem;
-  line-height: 1.75;
+  font-size: clamp(1rem, 1.1vw, 1.1rem);
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 400;
+  margin-bottom: 0;
+  line-height: 1.7;
+  max-width: 540px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  animation: fadeUp 0.7s ease-out 0.32s forwards;
+  opacity: 0;
 }
 
-.hero-actions {
-  display: flex;
-  gap: 1.25rem;
+
+/* ────────────────────────────────────
+   SECTION 1: TENTANG PEMTA
+   ──────────────────────────────────── */
+.pemta-about {
+  padding: 6rem 0;
+  background-color: #f8fafc;
 }
 
-.hero-image {
-  display: flex;
-  justify-content: center;
+.pemta-about-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
   align-items: center;
-  width: 100%;
-  animation: float 6s ease-in-out infinite;
 }
 
-.hero-image img {
-  width: 100%;
-  max-width: 100%;
-  height: auto;
+.pa-left .pa-label {
+  color: #003EA8;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
   display: block;
 }
 
-/* Tentang Section */
-.about-section {
-  padding: 6rem 0 8rem;
+.pa-left .pa-title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.3;
+  margin-bottom: 1.5rem;
 }
 
-.about-card {
-  background-color: var(--primary-color);
-  color: var(--white);
-  padding: 6rem 4rem;
-  border-radius: 2rem;
+.pa-left .pa-desc {
+  font-size: 1.05rem;
+  color: #64748b;
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+
+.pa-right {
+  background: transparent;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.pa-feature {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: #ffffff;
+  border: 1px solid #e8edf5;
+  border-radius: 0.875rem;
+  padding: 1.75rem;
+  box-shadow: 0 4px 12px -4px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.pa-feature:hover {
+  box-shadow: 0 8px 24px -6px rgba(0, 62, 168, 0.1);
+  transform: translateY(-2px);
+}
+
+.pa-feature-icon {
+  font-size: 2rem;
+  color: #003EA8;
+  margin-bottom: 1rem;
+}
+
+.pa-feature-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.5rem;
+}
+
+.pa-feature-desc {
+  font-size: 0.9rem;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+/* ────────────────────────────────────
+   SECTION 2: PERJALANAN PEMTA
+   ──────────────────────────────────── */
+.pemta-timeline {
+  padding: 6rem 0;
+  background-color: #f8fafc;
   text-align: center;
+}
+
+.pt-label {
+  color: #003EA8;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.pt-title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 4rem;
+}
+
+.timeline-wrapper {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Horizontal line connecting steps */
+.timeline-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 40px;
+  /* Aligned with circles */
+  left: 5%;
+  right: 5%;
+  height: 2px;
+  background: repeating-linear-gradient(to right, #003EA8 0, #003EA8 4px, transparent 4px, transparent 10px);
+  z-index: 1;
+}
+
+.timeline-step {
+  position: relative;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-shadow: var(--shadow-lg);
+  flex: 1;
+  padding: 0 1rem;
 }
 
-.card-badge {
-  display: inline-flex;
+.ts-number {
+  background: #003EA8;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
   align-items: center;
-  gap: 0.5rem;
-  background-color: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  color: var(--white);
-  padding: 0.5rem 1.25rem;
-  border-radius: 2rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin-bottom: 2rem;
+  justify-content: center;
+  margin-bottom: 1rem;
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 3px solid #f8fafc;
 }
 
-.about-card .card-title {
-  font-size: 2.75rem;
+.ts-icon-box {
+  width: 80px;
+  height: 80px;
+  background: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: #003EA8;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.5rem;
+  margin-top: 20px;
+}
+
+.ts-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #0f172a;
+  margin-bottom: 0.5rem;
+}
+
+.ts-desc {
+  font-size: 0.85rem;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+/* ────────────────────────────────────
+   SECTION 3: TUJUAN PEMTA
+   ──────────────────────────────────── */
+.pemta-goals {
+  padding: 6rem 0;
+  background-color: #ffffff;
+  text-align: center;
+}
+
+.pg-label {
+  color: #003EA8;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.pg-title {
+  font-size: 2.25rem;
   font-weight: 800;
-  margin-bottom: 1.75rem;
-  letter-spacing: -0.5px;
+  color: #0f172a;
+  margin-bottom: 4rem;
 }
 
-.about-card .card-text {
-  font-size: 1.2rem;
-  line-height: 1.85;
-  max-width: 850px;
-  opacity: 0.95;
+.goals-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.goal-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  border-right: 1px solid #e2e8f0;
+  padding: 0 2rem;
+}
+
+.goal-item:last-child {
+  border-right: none;
+}
+
+.goal-icon {
+  font-size: 2.5rem;
+  color: #003EA8;
+  margin-bottom: 1.5rem;
+}
+
+.goal-title {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #0f172a;
+  margin-bottom: 0.5rem;
+}
+
+.goal-desc {
+  font-size: 0.9rem;
+  color: #64748b;
+  line-height: 1.6;
 }
 
 /* Footer */
@@ -376,21 +654,14 @@ ul {
   color: var(--primary-color);
 }
 
-/* Responsive Design */
+/* ── Responsive: 1024px ke bawah (tablet landscape) ── */
 @media (max-width: 1024px) {
+  .hero {
+    aspect-ratio: 16 / 9.5; /* Sedikit lebih tinggi di tablet */
+  }
+
   .hero-container {
-    grid-template-columns: 1fr;
-    text-align: center;
-    gap: 3.5rem;
-  }
-
-  .hero-content {
-    align-items: center;
-  }
-
-  .hero-image img {
-    margin: 0 auto;
-    max-width: 600px;
+    padding-left: 5vw;
   }
 
   .footer-grid {
@@ -399,21 +670,143 @@ ul {
   }
 }
 
+/* ── Layar pendek: cegah hero terlalu memampat ── */
+@media (max-height: 650px) and (min-width: 768px) {
+  .hero {
+    min-height: 550px;
+  }
+}
+
+/* ── Responsive: 768px ke bawah (mobile) ── */
 @media (max-width: 768px) {
   .nav-links {
     display: none;
   }
 
+  .hero {
+    aspect-ratio: auto;
+    min-height: auto;
+    padding: 5rem 0;
+    /* Pada mobile, gelapkan gradasi lebih jauh ke kanan agar teks tetap terbaca */
+    background-image: 
+      linear-gradient(
+        to right,
+        rgba(8, 35, 110, 0.92) 0%,
+        rgba(12, 45, 125, 0.85) 40%,
+        rgba(20, 60, 145, 0.65) 80%,
+        rgba(20, 60, 145, 0.35) 100%
+      ),
+      url('../assets/gedung-ppejp.jpeg');
+    background-position: center bottom;
+  }
+
+  .hero-container {
+    padding: 0 1.5rem;
+  }
+
+  .hero-content {
+    max-width: 100%;
+  }
+
+  .hero-image {
+    height: 350px; /* Fix tinggi gambar di mobile */
+  }
+
+  .hero-image img {
+    object-position: center;
+  }
+
   .hero-title {
-    font-size: 2.75rem;
+    font-size: 2.8rem;
   }
 
-  .about-card {
-    padding: 4rem 2rem;
+  .hero-subtitle-large {
+    font-size: 0.95rem;
+    letter-spacing: 0.12em;
   }
 
-  .about-card .card-title {
-    font-size: 2rem;
+  .hero-subtitle {
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .pemta-about-container {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .pa-right {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+
+  .pa-feature {
+    padding: 1.25rem;
+  }
+
+  .timeline-wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .timeline-wrapper::before {
+    display: none;
+  }
+
+  .timeline-step {
+    flex-direction: row;
+    align-items: flex-start;
+    text-align: left;
+    margin-bottom: 2rem;
+    padding: 0;
+    width: 100%;
+    position: relative;
+  }
+
+  .timeline-step::before {
+    content: '';
+    position: absolute;
+    left: 30px;
+    top: 70px;
+    bottom: -30px;
+    width: 2px;
+    background: repeating-linear-gradient(to bottom, #003EA8 0, #003EA8 4px, transparent 4px, transparent 10px);
+    z-index: 1;
+  }
+
+  .timeline-step:last-child::before {
+    display: none;
+  }
+
+  .ts-icon-box {
+    margin: 0 1.5rem 0 0;
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+    margin-top: 15px;
+  }
+
+  .ts-number {
+    left: 16px;
+    top: -8px;
+    transform: none;
+    width: 24px;
+    height: 24px;
+    font-size: 0.65rem;
+  }
+
+  .ts-text-wrap {
+    margin-top: 10px;
+  }
+
+  .goals-row {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 3rem;
+  }
+
+  .goal-item:nth-child(2) {
+    border-right: none;
   }
 
   .footer-grid {
@@ -429,19 +822,32 @@ ul {
 }
 
 @media (max-width: 480px) {
-  .container {
-    padding: 0 1.5rem;
+  .hero-container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
   }
 
   .hero-title {
-    font-size: 2.25rem;
+    font-size: 2.15rem;
   }
 
-  .hero-actions {
-    width: 100%;
+  .pa-right {
+    grid-template-columns: 1fr;
   }
 
-  .hero-actions .btn {
-    width: 100%;
+  .goals-row {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .goal-item {
+    border-right: none;
+    padding: 0;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 1.5rem;
+  }
+
+  .goal-item:last-child {
+    border-bottom: none;
   }
 }

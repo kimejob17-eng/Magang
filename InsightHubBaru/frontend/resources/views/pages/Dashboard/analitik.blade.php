@@ -85,12 +85,12 @@
 
                 {{-- Tombol Terapkan --}}
                 <button type="submit" class="btn btn-primary" style="height: 38px; display: flex; align-items: center; gap: 0.5rem; white-space: nowrap;">
-                    <i class="ph-bold ph-funnel"></i> Terapkan Filter
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg> Terapkan Filter
                 </button>
 
                 {{-- Tombol Reset --}}
                 <a href="{{ route('dashboard') }}" class="btn" style="height: 38px; display: flex; align-items: center; gap: 0.5rem; white-space: nowrap;">
-                    <i class="ph-bold ph-arrow-counter-clockwise"></i> Reset
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><polyline points="3 3 3 8 8 8"></polyline></svg> Reset
                 </a>
             </div>
         </div>
@@ -108,7 +108,7 @@
         $aTotalLike   = $ma->sum('likes');
         $aTotalComment= $ma->sum('comments');
         $aTotalShare  = $ma->sum('shares');
-        $aTotalEng    = $aTotalLike + $aTotalComment + $aTotalShare;
+        $aTotalEng    = $aTotalLike + $aTotalComment + $aTotalShare + $ma->where('sumber_tabel', 'youtube_shorts')->sum('repost');
         $aEngRate     = $aTotalReach > 0 ? ($aTotalEng / $aTotalReach) * 100 : 0;
         $aAvgEng      = $aTotal > 0 ? $aTotalEng / $aTotal : 0;
         $aAvgReach    = $aTotal > 0 ? $aTotalReach / $aTotal : 0;
@@ -126,7 +126,7 @@
 
         $platformStats = [];
         foreach ($ma->groupBy(fn($m) => strtolower($m->platform)) as $plat => $items) {
-            $pEng = $items->sum('likes') + $items->sum('comments') + $items->sum('shares');
+            $pEng = $items->sum('likes') + $items->sum('comments') + $items->sum('shares') + $items->where('sumber_tabel', 'youtube_shorts')->sum('repost');
             $pReach = $items->sum('reach');
             $platformStats[$plat] = [
                 'count'   => $items->count(),
@@ -141,7 +141,7 @@
         // --- Analisis Kategori ---
         $categoryStats = [];
         foreach ($ma->groupBy('kategori') as $cat => $items) {
-            $cEng = $items->sum('likes') + $items->sum('comments') + $items->sum('shares');
+            $cEng = $items->sum('likes') + $items->sum('comments') + $items->sum('shares') + $items->where('sumber_tabel', 'youtube_shorts')->sum('repost');
             $cReach = $items->sum('reach');
             $categoryStats[$cat ?: 'Tanpa Kategori'] = [
                 'count' => $items->count(),
@@ -156,7 +156,7 @@
         // --- Analisis Jenis Konten ---
         $contentTypeStats = [];
         foreach ($ma->groupBy('jenis') as $ct => $items) {
-            $ctEng = $items->sum('likes') + $items->sum('comments') + $items->sum('shares');
+            $ctEng = $items->sum('likes') + $items->sum('comments') + $items->sum('shares') + $items->where('sumber_tabel', 'youtube_shorts')->sum('repost');
             $ctReach = $items->sum('reach');
             $contentTypeStats[$ct ?: 'Lainnya'] = [
                 'count' => $items->count(),
@@ -167,9 +167,9 @@
         }
         $maxCtReach = collect($contentTypeStats)->max('reach') ?: 1;
 
-        // --- Top 10 & Bottom 10 by Reach ---
-        $top10    = $ma->sortByDesc('reach')->take(10);
-        $bottom10 = $ma->sortBy('reach')->filter(fn($m) => $m->reach > 0)->take(10);
+        // --- Top 10 by Reach & Top 10 by Likes ---
+        $top10      = $ma->sortByDesc('reach')->take(10);
+        $top10Likes = $ma->sortByDesc('likes')->take(10);
 
         // --- Insight ---
         $topPlatform = collect($platformStats)->sortByDesc('rate')->keys()->first();
@@ -194,13 +194,13 @@
     <div style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
         <span style="font-size: 0.85rem; color: #64748b;">Menampilkan data untuk:</span>
         <span style="background: #0f172a; color: #fff; padding: 0.3rem 0.75rem; border-radius: 2rem; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 0.35rem;">
-            <i class="ph-bold ph-device-mobile"></i> {{ $activeLabel }}
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg> {{ $activeLabel }}
         </span>
         <span style="background: #e0e7ff; color: #4f46e5; padding: 0.3rem 0.75rem; border-radius: 2rem; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 0.35rem;">
-            <i class="ph-bold ph-calendar"></i> {{ $activePeriode }}
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> {{ $activePeriode }}
         </span>
         <span style="background: #dcfce7; color: #166534; padding: 0.3rem 0.75rem; border-radius: 2rem; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 0.35rem;">
-            <i class="ph-bold ph-stack"></i> {{ $aTotal }} konten
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg> {{ $aTotal }} konten
         </span>
     </div>
 
@@ -212,7 +212,9 @@
         <div class="stat-card">
             <div class="stat-header">
                 <div class="stat-title" style="margin:0; font-size: 0.8rem; color: #475569;">TOTAL REACH</div>
-                <div class="stat-icon" style="background:#d1fae5; color:#059669; width:36px; height:36px;"><i class="ph-fill ph-broadcast"></i></div>
+                <div class="stat-icon" style="background:#d1fae5; color:#059669; width:36px; height:36px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"></path><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"></path><circle cx="12" cy="12" r="2"></circle><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"></path><path d="M19.1 4.9C23 8.8 23 15.2 19.1 19.1"></path></svg>
+                </div>
             </div>
             <div class="stat-value" style="font-size: 1.5rem;">{{ number_format($aTotalReach) }}</div>
             <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.25rem;">Total Views / Reach</div>
@@ -221,7 +223,9 @@
         <div class="stat-card">
             <div class="stat-header">
                 <div class="stat-title" style="margin:0; font-size: 0.8rem; color: #475569;">TOTAL ENGAGEMENT</div>
-                <div class="stat-icon" style="background:#fce7f3; color:#db2777; width:36px; height:36px;"><i class="ph-fill ph-heart"></i></div>
+                <div class="stat-icon" style="background:#fce7f3; color:#db2777; width:36px; height:36px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
+                </div>
             </div>
             <div class="stat-value" style="font-size: 1.5rem;">{{ number_format($aTotalEng) }}</div>
             <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.25rem;">Like + Comment + Share</div>
@@ -230,7 +234,9 @@
         <div class="stat-card">
             <div class="stat-header">
                 <div class="stat-title" style="margin:0; font-size: 0.8rem; color: #475569;">ENGAGEMENT RATE</div>
-                <div class="stat-icon" style="background:#f3e8ff; color:#9333ea; width:36px; height:36px;"><i class="ph-fill ph-chart-line-up"></i></div>
+                <div class="stat-icon" style="background:#f3e8ff; color:#9333ea; width:36px; height:36px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>
+                </div>
             </div>
             <div class="stat-value" style="font-size: 1.5rem;">{{ number_format($aEngRate, 2) }}%</div>
             <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.25rem;">Eng / Reach × 100%</div>
@@ -239,7 +245,9 @@
         <div class="stat-card">
             <div class="stat-header">
                 <div class="stat-title" style="margin:0; font-size: 0.8rem; color: #475569;">AVG ENGAGEMENT</div>
-                <div class="stat-icon" style="background:#eef2ff; color:#4f46e5; width:36px; height:36px;"><i class="ph-fill ph-trend-up"></i></div>
+                <div class="stat-icon" style="background:#eef2ff; color:#4f46e5; width:36px; height:36px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                </div>
             </div>
             <div class="stat-value" style="font-size: 1.5rem;">{{ number_format($aAvgEng, 0) }}</div>
             <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.25rem;">Per Konten</div>
@@ -248,7 +256,9 @@
         <div class="stat-card">
             <div class="stat-header">
                 <div class="stat-title" style="margin:0; font-size: 0.8rem; color: #475569;">AVG REACH</div>
-                <div class="stat-icon" style="background:#f1f5f9; color:#475569; width:36px; height:36px;"><i class="ph-fill ph-eye"></i></div>
+                <div class="stat-icon" style="background:#f1f5f9; color:#475569; width:36px; height:36px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                </div>
             </div>
             <div class="stat-value" style="font-size: 1.5rem;">{{ number_format($aAvgReach, 0) }}</div>
             <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.25rem;">Per Konten</div>
@@ -257,7 +267,9 @@
         <div class="stat-card">
             <div class="stat-header">
                 <div class="stat-title" style="margin:0; font-size: 0.8rem; color: #475569;">TOTAL KONTEN</div>
-                <div class="stat-icon" style="background:#fef3c7; color:#d97706; width:36px; height:36px;"><i class="ph-fill ph-stack"></i></div>
+                <div class="stat-icon" style="background:#fef3c7; color:#d97706; width:36px; height:36px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 22 8.5 12 15 2 8.5 12 2"></polygon><polyline points="2 13.5 12 20 22 13.5"></polyline><polyline points="2 10.5 12 17 22 10.5"></polyline></svg>
+                </div>
             </div>
             <div class="stat-value" style="font-size: 1.5rem;">{{ number_format($aTotal) }}</div>
             <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.25rem;">Konten Dianalisis</div>
@@ -269,52 +281,92 @@
     ============================================================ --}}
     <div class="grid-2-1" style="margin-bottom: 2rem;">
 
-        {{-- Analisis Platform --}}
+        {{-- Analisis Platform (gaya leaderboard) --}}
         <div class="card">
-            <div class="card-title">Analisis Platform
-                <span style="font-size: 0.75rem; font-weight: normal; background: #f1f5f9; padding: 4px 8px; border-radius: 4px;">Berdasarkan Reach</span>
+            <div class="card-title">Platform Terbaik
+                <span style="font-size: 0.75rem; font-weight: normal; background: #f1f5f9; padding: 4px 8px; border-radius: 4px;">Diurutkan berdasarkan reach</span>
             </div>
             @if(count($platformStats) > 0)
-            <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 0.5rem;">
-                @foreach($platformStats as $platName => $pStat)
-                <div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.35rem; font-size: 0.875rem;">
-                        <span style="display: flex; align-items: center; gap: 0.5rem;">
-                            <i class="ph-fill ph-{{ $platName }}-logo" style="color: {{ $pStat['color'] }};"></i>
-                            {{ ucfirst($platName) }}
-                            <span style="font-size: 0.75rem; color: #64748b;">({{ $pStat['count'] }} konten)</span>
-                        </span>
-                        <span style="font-weight: 600; color: #0f172a;">
-                            {{ number_format($pStat['reach']) }} reach
-                            <span style="color: #9333ea; font-size: 0.8rem; font-weight: 500;">&nbsp;{{ $pStat['rate'] }}% ER</span>
-                        </span>
+            @php $rankedPlatforms = collect($platformStats)->sortByDesc('reach'); @endphp
+            <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.75rem;">
+                @foreach($rankedPlatforms as $platName => $pStat)
+                @php $rank = $loop->iteration; @endphp
+                <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem; border-radius: 10px; background: {{ $rank === 1 ? '#f8fafc' : 'transparent' }};">
+                    <div style="width: 26px; height: 26px; border-radius: 50%; background: {{ $rank === 1 ? '#fac775' : '#f1f5f9' }}; color: {{ $rank === 1 ? '#633806' : '#64748b' }}; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600; flex-shrink: 0;">{{ $rank }}</div>
+                    @php
+                        $platLowerName = strtolower($platName);
+                        $bgSoft = '#f1f5f9';
+                        if ($platLowerName == 'facebook') { $bgSoft = '#e3edfd'; }
+                        elseif ($platLowerName == 'instagram') { $bgSoft = '#fce7f0'; }
+                        elseif ($platLowerName == 'tiktok') { $bgSoft = '#f1f5f9'; }
+                        elseif (str_contains($platLowerName, 'youtube') || str_contains($platLowerName, 'yt-')) { $bgSoft = '#fde2e2'; }
+                    @endphp
+                    <div style="width: 32px; height: 32px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; background: {{ $bgSoft }}; color: {{ $pStat['color'] }}; flex-shrink: 0;">
+                        @if($platName == 'instagram')
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                        @elseif($platName == 'facebook')
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                        @elseif($platName == 'tiktok')
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
+                        @elseif($platName == 'youtube' || $platName == 'yt-video' || $platName == 'yt-shorts' || $platName == 'yt-live')
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+                        @else
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                        @endif
                     </div>
-                    <div style="width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px;">
-                        <div style="width: {{ $maxPlatformReach > 0 ? round(($pStat['reach'] / $maxPlatformReach) * 100, 1) : 0 }}%; height: 100%; background: {{ $pStat['color'] }}; border-radius: 4px;"></div>
+                    <div style="flex: 1; min-width: 0;">
+                        <div style="font-size: 0.875rem; font-weight: 600; color: #0f172a;">{{ ucfirst($platName) }}</div>
+                        <div style="font-size: 0.75rem; color: #64748b;">{{ $pStat['count'] }} konten &middot; {{ $pStat['rate'] }}% ER</div>
                     </div>
+                    <div style="font-size: 1rem; font-weight: 600; color: #0f172a; white-space: nowrap;">{{ number_format($pStat['reach']) }}</div>
                 </div>
                 @endforeach
             </div>
             @else
-            <div style="text-align: center; padding: 2rem; color: #64748b;"><i class="ph ph-empty" style="font-size: 2rem;"></i><br>Tidak ada data untuk filter ini.</div>
+            <div style="text-align: center; padding: 2rem; color: #64748b;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 0.5rem;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                <br>Tidak ada data untuk filter ini.
+            </div>
             @endif
         </div>
 
-        {{-- Analisis Jenis Konten --}}
+        {{-- Analisis Jenis Konten (gaya gauge/dial) --}}
         <div style="display: flex; flex-direction: column; gap: 1.5rem;">
             <div class="card">
-                <div class="card-title" style="margin-bottom: 1rem;">Jenis Konten</div>
+                <div class="card-title" style="margin-bottom: 0.25rem;">Format Paling Efektif</div>
+                <div style="font-size: 0.75rem; color: #64748b; margin-bottom: 1rem;">Engagement rate per format konten</div>
                 @if(count($contentTypeStats) > 0)
-                <div style="display: flex; flex-direction: column; gap: 0.85rem;">
+                @php $avgCtRate = collect($contentTypeStats)->avg('rate'); @endphp
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
                     @foreach($contentTypeStats as $ctName => $ctStat)
-                    <div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem; font-size: 0.82rem;">
-                            <span>{{ ucfirst($ctName ?: 'Lainnya') }} <span style="color:#64748b;">({{ $ctStat['count'] }})</span></span>
-                            <b>{{ number_format($ctStat['rate'], 1) }}% ER</b>
+                    @php
+                        $gaugePct = max(0, min(100, $ctStat['rate']));
+                        $gaugeColor = $ctStat['rate'] >= $avgCtRate ? '#639922' : '#94a3b8';
+                    @endphp
+                    <div style="background: #f8fafc; border-radius: 10px; padding: 0.75rem; text-align: center;">
+                        <div style="width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 6px; background: conic-gradient({{ $gaugeColor }} 0% {{ $gaugePct }}%, #e2e8f0 {{ $gaugePct }}% 100%); display: flex; align-items: center; justify-content: center;">
+                            <div style="width: 40px; height: 40px; border-radius: 50%; background: #f8fafc; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 600; color: #0f172a;">{{ number_format($ctStat['rate'], 1) }}%</div>
                         </div>
-                        <div style="width: 100%; height: 6px; background: #e2e8f0; border-radius: 4px;">
-                            <div style="width: {{ $maxCtReach > 0 ? round(($ctStat['reach'] / $maxCtReach) * 100, 1) : 0 }}%; height: 100%; background: #4f46e5; border-radius: 4px;"></div>
+                        <div style="font-size: 0.75rem; font-weight: 600; color: #0f172a; display: inline-flex; align-items: center; gap: 0.35rem; margin: 0 auto 0.25rem; justify-content: center;">
+                            @php
+                                $n = strtolower($ctName);
+                            @endphp
+                            @if(str_contains($n, 'shorts'))
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #ff0000;"><rect x="6" y="2" width="12" height="20" rx="2" ry="2"></rect><polygon points="10 15 15 12 10 9 10 15"></polygon></svg>
+                            @elseif(str_contains($n, 'live'))
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #ef4444;"><circle cx="12" cy="12" r="2"></circle><path d="M16.2 7.8a6 6 0 0 1 0 8.5m3.9-12.4a11 11 0 0 1 0 16.3M7.8 16.2a6 6 0 0 1 0-8.5M3.9 19.1a11 11 0 0 1 0-16.3"></path></svg>
+                            @elseif(str_contains($n, 'reels'))
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #e1306c;"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line><line x1="2" y1="7" x2="7" y2="7"></line><line x1="2" y1="17" x2="7" y2="17"></line><line x1="17" y1="17" x2="22" y2="17"></line><line x1="17" y1="7" x2="22" y2="7"></line></svg>
+                            @elseif(str_contains($n, 'video'))
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #3b82f6;"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+                            @elseif(str_contains($n, 'post') || str_contains($n, 'image') || str_contains($n, 'feed'))
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #10b981;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                            @else
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #64748b;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                            @endif
+                            <span>{{ ucfirst($ctName ?: 'Lainnya') }}</span>
                         </div>
+                        <div style="font-size: 0.7rem; color: #64748b;">{{ $ctStat['count'] }} konten</div>
                     </div>
                     @endforeach
                 </div>
@@ -333,46 +385,53 @@
             <span style="font-size: 0.75rem; font-weight: normal; background: #f1f5f9; padding: 4px 8px; border-radius: 4px;">{{ $activeLabel }} &bull; {{ $activePeriode }}</span>
         </div>
         @if(count($categoryStats) > 0)
-        <div style="overflow-x: auto;">
-            <table class="data-table" style="margin-top: 0;">
-                <thead>
-                    <tr>
-                        <th>Kategori</th>
-                        <th style="text-align: center;">Jumlah Konten</th>
-                        <th style="text-align: right;">Total Reach</th>
-                        <th style="text-align: right;">Total Engagement</th>
-                        <th style="text-align: right;">Engagement Rate</th>
-                        <th>Performa Reach</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach(collect($categoryStats)->sortByDesc('reach') as $catName => $cStat)
-                    <tr>
-                        <td>
-                            <span style="background: #e2e8f0; padding: 0.2rem 0.6rem; border-radius: 1rem; font-size: 0.8rem; font-weight: 500;">
-                                {{ $catName }}
-                            </span>
-                        </td>
-                        <td style="text-align: center; font-weight: 600;">{{ $cStat['count'] }}</td>
-                        <td style="text-align: right; font-weight: 600;">{{ number_format($cStat['reach']) }}</td>
-                        <td style="text-align: right; font-weight: 600;">{{ number_format($cStat['eng']) }}</td>
-                        <td style="text-align: right;">
-                            <span class="{{ $cStat['rate'] >= 3 ? 'trend-up' : ($cStat['rate'] >= 1 ? '' : 'trend-down') }}" style="font-weight: 600;">
-                                {{ $cStat['rate'] }}%
-                            </span>
-                        </td>
-                        <td style="min-width: 120px;">
-                            <div style="width: 100%; height: 6px; background: #e2e8f0; border-radius: 4px;">
-                                <div style="width: {{ $maxCatReach > 0 ? round(($cStat['reach'] / $maxCatReach) * 100, 1) : 0 }}%; height: 100%; background: #10b981; border-radius: 4px;"></div>
-                            </div>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
+            
+            <!-- Kiri: Tabel -->
+            <div style="overflow-x: auto; background: #fff; border: 1px solid #e2e8f0; border-radius: 0.5rem;">
+                <table class="data-table" style="margin-top: 0;">
+                    <thead>
+                        <tr>
+                            <th>Kategori</th>
+                            <th style="text-align: center;">Jumlah Konten</th>
+                            <th style="text-align: right;">Total Reach</th>
+                            <th style="text-align: right;">Total Engagement</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(collect($categoryStats)->sortByDesc('reach') as $catName => $cStat)
+                        <tr>
+                            <td>
+                                <span style="background: #e2e8f0; padding: 0.2rem 0.6rem; border-radius: 1rem; font-size: 0.8rem; font-weight: 500;">
+                                    {{ $catName }}
+                                </span>
+                            </td>
+                            <td style="text-align: center; font-weight: 600;">{{ $cStat['count'] }}</td>
+                            <td style="text-align: right; font-weight: 600;">{{ number_format($cStat['reach']) }}</td>
+                            <td style="text-align: right; font-weight: 600;">{{ number_format($cStat['eng']) }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Kanan: Line Chart -->
+            <div style="background: #fff; border: 1px solid #e2e8f0; border-radius: 0.5rem; padding: 1.5rem; display: flex; flex-direction: column;">
+                <div style="margin-bottom: 1rem;">
+                    <h3 style="font-size: 1rem; font-weight: 600; color: #0f172a; margin: 0 0 0.25rem 0;">Tren Kategori Konten</h3>
+                    <p style="font-size: 0.8rem; color: #64748b; margin: 0;">Jumlah Konten berdasarkan Kategori</p>
+                </div>
+                <div style="flex-grow: 1; position: relative; height: 350px;">
+                    <canvas id="kategoriLineChart"></canvas>
+                </div>
+            </div>
+            
         </div>
         @else
-        <div style="text-align: center; padding: 2rem; color: #64748b;"><i class="ph ph-empty" style="font-size: 2rem; display: block; margin-bottom: 0.5rem;"></i>Tidak ada data kategori untuk filter ini.</div>
+        <div style="text-align: center; padding: 2rem; color: #64748b;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: block; margin: 0 auto 0.5rem;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            Tidak ada data kategori untuk filter ini.
+        </div>
         @endif
     </div>
 
@@ -384,7 +443,7 @@
         {{-- TOP 10 --}}
         <div class="card" style="padding: 0;">
             <div class="card-title" style="padding: 1.25rem 1.5rem; margin-bottom: 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 0.5rem;">
-                <i class="ph-bold ph-trophy" style="color: #f59e0b;"></i> Top 10 Konten
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 2px;"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.45 1-1 1H4v2h16v-2h-5c-.55 0-1-.45-1-1v-2.34"></path><path d="M12 2a6 6 0 0 1 6 6v5a6 6 0 0 1-6 6 6 6 0 0 1-6-6V8a6 6 0 0 1 6-6z"></path></svg> Top 10 Konten
                 <span style="font-size: 0.75rem; font-weight: normal; color: #64748b; margin-left: auto;">berdasarkan Reach</span>
             </div>
             <div style="overflow-x: auto;">
@@ -395,15 +454,10 @@
                             <th>Konten</th>
                             <th>Platform</th>
                             <th style="text-align: right;">Reach</th>
-                            <th style="text-align: right;">Eng. Rate</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($top10 as $i => $metric)
-                        @php
-                            $mEng = $metric->likes + $metric->comments + $metric->shares;
-                            $mRate = $metric->reach > 0 ? round(($mEng / $metric->reach) * 100, 2) : 0;
-                        @endphp
                         <tr>
                             <td style="font-weight: 700; color: {{ $i < 3 ? '#f59e0b' : '#64748b' }}; font-size: 0.9rem;">{{ $i + 1 }}</td>
                             <td>
@@ -416,23 +470,20 @@
                             </td>
                             <td style="font-size: 0.8rem;">{{ ucfirst($metric->platform) }}</td>
                             <td style="text-align: right; font-weight: 600; font-size: 0.875rem;">{{ number_format($metric->reach) }}</td>
-                            <td style="text-align: right;">
-                                <span class="{{ $mRate >= 3 ? 'trend-up' : '' }}" style="font-size: 0.8rem; font-weight: 600;">{{ $mRate }}%</span>
-                            </td>
                         </tr>
                         @empty
-                        <tr><td colspan="5" style="text-align: center; color: #64748b; padding: 2rem;">Tidak ada data.</td></tr>
+                        <tr><td colspan="4" style="text-align: center; color: #64748b; padding: 2rem;">Tidak ada data.</td></tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
         </div>
 
-        {{-- BOTTOM 10 --}}
+        {{-- TOP 10 LIKES --}}
         <div class="card" style="padding: 0;">
             <div class="card-title" style="padding: 1.25rem 1.5rem; margin-bottom: 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 0.5rem;">
-                <i class="ph-bold ph-arrow-down" style="color: #ef4444;"></i> Bottom 10 Konten
-                <span style="font-size: 0.75rem; font-weight: normal; color: #64748b; margin-left: auto;">Reach terendah</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#db2777" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 2px;"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg> Top 10 Likes Konten
+                <span style="font-size: 0.75rem; font-weight: normal; color: #64748b; margin-left: auto;">Berdasarkan jumlah Likes tertinggi</span>
             </div>
             <div style="overflow-x: auto;">
                 <table class="data-table">
@@ -441,18 +492,13 @@
                             <th>#</th>
                             <th>Konten</th>
                             <th>Platform</th>
-                            <th style="text-align: right;">Reach</th>
-                            <th style="text-align: right;">Eng. Rate</th>
+                            <th style="text-align: right;">Likes</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($bottom10 as $i => $metric)
-                        @php
-                            $mEng = $metric->likes + $metric->comments + $metric->shares;
-                            $mRate = $metric->reach > 0 ? round(($mEng / $metric->reach) * 100, 2) : 0;
-                        @endphp
+                        @forelse($top10Likes as $i => $metric)
                         <tr>
-                            <td style="font-weight: 600; color: #94a3b8; font-size: 0.9rem;">{{ $i + 1 }}</td>
+                            <td style="font-weight: 700; color: {{ $i < 3 ? '#db2777' : '#64748b' }}; font-size: 0.9rem;">{{ $i + 1 }}</td>
                             <td>
                                 <div style="font-size: 0.85rem; font-weight: 600; color: #0f172a; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                                     {{ $metric->judul_konten ?: 'Konten ' . ucfirst($metric->platform) }}
@@ -462,13 +508,10 @@
                                 </div>
                             </td>
                             <td style="font-size: 0.8rem;">{{ ucfirst($metric->platform) }}</td>
-                            <td style="text-align: right; font-weight: 600; font-size: 0.875rem; color: #ef4444;">{{ number_format($metric->reach) }}</td>
-                            <td style="text-align: right;">
-                                <span style="font-size: 0.8rem; font-weight: 600; color: #ef4444;">{{ $mRate }}%</span>
-                            </td>
+                            <td style="text-align: right; font-weight: 600; font-size: 0.875rem; color: #db2777;">{{ number_format($metric->likes) }}</td>
                         </tr>
                         @empty
-                        <tr><td colspan="5" style="text-align: center; color: #64748b; padding: 2rem;">Tidak ada data.</td></tr>
+                        <tr><td colspan="4" style="text-align: center; color: #64748b; padding: 2rem;">Tidak ada data.</td></tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -479,7 +522,8 @@
     {{-- ============================================================
          INSIGHT ANALITIK
     ============================================================ --}}
-    <!-- <div style="background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%); border-radius: 1rem; padding: 1.75rem; color: #fff; box-shadow: 0 10px 25px -5px rgba(15,23,42,0.35); margin-bottom: 2rem;">
+    {{--
+    <div style="background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%); border-radius: 1rem; padding: 1.75rem; color: #fff; box-shadow: 0 10px 25px -5px rgba(15,23,42,0.35); margin-bottom: 2rem;">
         <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
             <i class="ph-fill ph-lightbulb" style="font-size: 1.5rem; color: #fbbf24;"></i>
             <h3 style="margin: 0; font-size: 1.15rem; font-weight: 600;">Insight Analitik</h3>
@@ -567,9 +611,10 @@
                 </div>
             </div>
 
-        </div> -->
+        </div>
         @endif
     </div>
+    --}}
 
 </div>
 
@@ -589,4 +634,145 @@
         var selected = document.getElementById('analitikPeriodeType');
         if (selected) showPeriodeInput(selected.value);
     })();
+
+    // ---- Bersihkan URL: nonaktifkan field periode yang tidak dipakai sebelum submit ----
+    // Elemen yang `disabled` tidak ikut dikirim browser sebagai query string,
+    // jadi field kosong dari periode lain (range/bulan/tahun) tidak lagi menumpuk di URL.
+    (function() {
+        var form = document.getElementById('analitikFilterForm');
+        if (!form) return;
+
+        var groups = {
+            range: ['analitik_date_start', 'analitik_date_end'],
+            bulan: ['analitik_bulan', 'analitik_tahun_bulan'],
+            tahun: ['analitik_tahun']
+        };
+
+        form.addEventListener('submit', function() {
+            var selected = document.getElementById('analitikPeriodeType').value;
+            Object.keys(groups).forEach(function(key) {
+                var isActive = (key === selected);
+                groups[key].forEach(function(name) {
+                    var el = form.querySelector('[name="' + name + '"]');
+                    if (el) el.disabled = !isActive;
+                });
+            });
+        });
+    })();
+</script>
+
+{{-- ============================================================
+     SCRIPT: Line Chart Kategori Konten
+============================================================ --}}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctxKategori = document.getElementById('kategoriLineChart');
+    if (!ctxKategori) return;
+
+    @php
+        $chartKategoriData = collect($categoryStats)->sortByDesc('reach')->map(function($stat, $name) {
+            return [
+                'name' => $name,
+                'count' => $stat['count'],
+                'rate' => $stat['rate'],
+                'reach' => $stat['reach'],
+                'eng' => $stat['eng']
+            ];
+        })->values()->toArray();
+    @endphp
+
+    const rawData = @json($chartKategoriData);
+    
+    if (rawData.length === 0) return;
+
+    const labels = rawData.map(d => d.name);
+    const countData = rawData.map(d => d.count);
+
+    new Chart(ctxKategori, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Jumlah Konten',
+                    data: countData,
+                    yAxisID: 'yCount',
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#3b82f6',
+                    pointBorderColor: '#fff',
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    tension: 0.3,
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        usePointStyle: true,
+                        boxWidth: 8,
+                        padding: 20,
+                        font: { family: "'Inter', sans-serif", size: 11 }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                    titleFont: { family: "'Inter', sans-serif", size: 13, weight: '600' },
+                    bodyFont: { family: "'Inter', sans-serif", size: 12 },
+                    padding: 10,
+                    cornerRadius: 8,
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            label += context.parsed.y.toLocaleString('id-ID');
+                            return label;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: {
+                        font: { family: "'Inter', sans-serif", size: 11 },
+                        color: '#64748b',
+                        maxRotation: 45,
+                        minRotation: 0
+                    }
+                },
+                yCount: {
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
+                    title: {
+                        display: true,
+                        text: 'Jumlah Konten',
+                        font: { family: "'Inter', sans-serif", size: 10 },
+                        color: '#64748b'
+                    },
+                    grid: { color: 'rgba(0,0,0,0.05)' },
+                    ticks: {
+                        font: { family: "'Inter', sans-serif", size: 10 },
+                        color: '#64748b',
+                        precision: 0
+                    }
+                }
+            }
+        }
+    });
+});
 </script>

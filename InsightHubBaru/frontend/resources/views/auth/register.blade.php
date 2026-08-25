@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InsightHub — Daftar Akun</title>
-    <meta name="description" content="Buat akun InsightHub untuk mengakses dashboard analitik data Anda.">
+    <title>SOVIE — Daftar</title>
+    <meta name="description" content="Daftar ke SOVIE untuk mengakses dashboard analitik data Anda.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -61,15 +61,20 @@
     <div class="auth-card">
 
         <!-- Logo -->
-        <a href="{{ url('/') }}" class="auth-logo" aria-label="InsightHub Beranda">
-            <span class="logo-box"><i class="ph-fill ph-chart-line-up"></i></span>
-            <span class="logo-name">InsightHub</span>
+        <a href="{{ url('/') }}" class="auth-logo" aria-label="SOVIE Beranda">
+            <div class="mk-auth-brand-logo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 3v18h18"/>
+                    <path d="M18 9l-5 5-4-4-6 6"/>
+                </svg>
+            </div>
+            <span class="mk-auth-brand-text">SOVIE</span>
         </a>
 
         <!-- Heading -->
         <div class="auth-heading">
-            <h1 class="auth-title">Buat Akun Baru</h1>
-            <p class="auth-subtitle">Daftar untuk mulai mengakses dashboard InsightHub.</p>
+            <h1 class="mk-auth-title">Buat Akun Baru</h1>
+            <p class="mk-auth-subtitle">Buat akun untuk mengakses dashboard SOVIE.</p>
         </div>
 
         <!-- Alerts -->
@@ -194,8 +199,10 @@
     </div><!-- /.auth-card -->
 
     <!-- Footer -->
+    <div class="mk-auth-footer">
+        &copy; 2024 SOVIE. All rights reserved.
+    </div>
     <footer class="auth-footer" role="contentinfo">
-        <p>&copy; 2024 InsightHub. All rights reserved.</p>
         <nav>
             <a href="#">Kebijakan Privasi</a>
             <span aria-hidden="true">•</span>

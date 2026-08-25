@@ -30,7 +30,7 @@ class RingkasanController extends Controller
         // Langkah 2 — Hitung KPI Global
         $totalKonten     = $metrics->count();
         $totalFollowers  = $metrics->sum('followers_plus');
-        $totalEngagement = $metrics->sum('likes') + $metrics->sum('comments') + $metrics->sum('shares');
+        $totalEngagement = $metrics->sum('likes') + $metrics->sum('comments') + $metrics->sum('shares') + $metrics->where('sumber_tabel', 'youtube_shorts')->sum('repost');
         $totalReach      = $metrics->sum('reach');
         $engagementRate  = $totalReach > 0 ? round(($totalEngagement / $totalReach) * 100, 2) : 0;
         $pertumbuhanFollowers = (int) ($totalFollowers * 0.012);
@@ -56,7 +56,7 @@ class RingkasanController extends Controller
                 'warna'            => $meta['warna'],
                 'total_konten'     => $items->count(),
                 'total_reach'      => $items->sum('reach'),
-                'total_engagement' => $items->sum('likes') + $items->sum('comments') + $items->sum('shares'),
+                'total_engagement' => $items->sum('likes') + $items->sum('comments') + $items->sum('shares') + $items->where('sumber_tabel', 'youtube_shorts')->sum('repost'),
                 'total_followers'  => $items->sum('followers_plus'),
             ];
         }

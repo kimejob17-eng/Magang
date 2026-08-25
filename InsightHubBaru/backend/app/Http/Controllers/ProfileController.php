@@ -34,15 +34,23 @@ class ProfileController extends Controller
         $data = [
             'name'     => $validated['name'],
             'email'    => $validated['email'],
-            'phone'    => $validated['phone'] ?? null,
-            'location' => $validated['location'] ?? null,
         ];
 
+        if (array_key_exists('phone', $validated)) {
+            $data['phone'] = $validated['phone'];
+        }
+        if (array_key_exists('location', $validated)) {
+            $data['location'] = $validated['location'];
+        }
+
         if ($request->hasFile('avatar')) {
-            if ($user->avatar) {
-                Storage::disk('public')->delete($user->avatar);
+            if ($user->avatar && file_exists(public_path($user->avatar))) {
+                @unlink(public_path($user->avatar));
             }
-            $data['avatar'] = $request->file('avatar')->store('avatars', 'public');
+            $file = $request->file('avatar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/avatars'), $filename);
+            $data['avatar'] = 'uploads/avatars/' . $filename;
         }
 
         $user->update($data);

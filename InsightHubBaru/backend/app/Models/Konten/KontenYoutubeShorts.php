@@ -12,15 +12,28 @@ class KontenYoutubeShorts extends Model
     const UPDATED_AT = 'diperbarui_pada';
 
     protected $fillable = [
-        'kategori_id', 'judul', 'tautan', 'tanggal_tayang',
-        'jumlah_penayangan', 'penambahan_subscriber',
-        'suka', 'komentar', 'dibagikan', 'diinput_oleh',
+        'kategori_id',
+        'judul',
+        'tautan',
+        'tanggal_tayang',
+        'jumlah_penayangan',
+        'penambahan_subscriber',
+        'likes',
+        'comments',
+        'shares',
+        'repost',
+        'diinput_oleh',
     ];
 
-    protected $casts = ['tanggal_tayang' => 'date'];
+    protected $casts = [
+        'tanggal_tayang' => 'date',
+    ];
 
     public function kategori()
     {
-        return $this->belongsTo(KategoriKonten::class, 'kategori_id');
+        return $this->belongsTo(
+            KategoriKonten::class,
+            'kategori_id'
+        );
     }
 }
