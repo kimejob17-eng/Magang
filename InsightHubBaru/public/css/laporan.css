@@ -1,0 +1,634 @@
+/* =============================================================
+   laporan.css — Scoped styles for the Laporan (Report) tab
+   All selectors are prefixed with #tab-laporan to prevent
+   conflicts with other dashboard tabs.
+   ============================================================= */
+
+/* ── Design Tokens ──────────────────────────────────────────── */
+#tab-laporan {
+    --lap-ink:          #0f172a;
+    --lap-sub:          #64748b;
+    --lap-line:         #e8ecf0;
+    --lap-surface:      #ffffff;
+    --lap-bg:           #f8fafc;
+    --lap-primary:      #4f46e5;
+    --lap-primary-soft: #eef2ff;
+    --lap-radius:       16px;
+    --lap-shadow:       0 1px 3px rgba(15,23,42,.06), 0 1px 2px rgba(15,23,42,.04);
+    --lap-shadow-hover: 0 8px 24px rgba(15,23,42,.10);
+}
+
+/* ── Page Header ─────────────────────────────────────────────── */
+#tab-laporan .lap-header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding-bottom: 1.35rem;
+    margin-bottom: 1.35rem;
+    border-bottom: 1px solid var(--lap-line);
+}
+#tab-laporan .lap-header h1 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--lap-ink);
+    letter-spacing: -.01em;
+    margin: 0 0 .25rem;
+}
+#tab-laporan .lap-header p {
+    color: var(--lap-sub);
+    font-size: .85rem;
+    margin: 0;
+}
+
+/* ── Export Buttons ──────────────────────────────────────────── */
+#tab-laporan .lap-export {
+    display: flex;
+    gap: .5rem;
+    flex-wrap: wrap;
+}
+#tab-laporan .lap-btn-export {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .5rem .9rem;
+    border-radius: 10px;
+    font-size: .82rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: transform .12s, box-shadow .12s, background-color .12s;
+}
+#tab-laporan .lap-btn-export:hover      { transform: translateY(-1px); }
+#tab-laporan .lap-btn-excel             { background: #ecfdf5; color: #047857; border-color: #bbf0da; }
+#tab-laporan .lap-btn-excel:hover       { background: #d1fae5; box-shadow: 0 4px 12px rgba(4,120,87,.12); }
+#tab-laporan .lap-btn-pdf               { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
+#tab-laporan .lap-btn-pdf:hover         { background: #fee2e2; box-shadow: 0 4px 12px rgba(185,28,28,.12); }
+
+/* ── Filter Card ─────────────────────────────────────────────── */
+#tab-laporan .lap-filter-card {
+    background: var(--lap-surface);
+    border: 1px solid var(--lap-line);
+    border-radius: var(--lap-radius);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.35rem;
+    box-shadow: var(--lap-shadow);
+    display: flex;
+    flex-direction: column;
+}
+#tab-laporan .lap-filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .7rem;
+    align-items: flex-end;
+}
+#tab-laporan .lap-field {
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+}
+#tab-laporan .lap-label {
+    font-size: .67rem;
+    font-weight: 700;
+    color: var(--lap-sub);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+/* Filter selects & date inputs */
+#tab-laporan .lap-filter-row select,
+#tab-laporan .lap-filter-row input[type="date"] {
+    height: 36px;
+    padding: 0 .7rem;
+    border-radius: 9px;
+    border: 1px solid var(--lap-line);
+    background: var(--lap-bg);
+    font-size: .83rem;
+    color: var(--lap-ink);
+    transition: border-color .12s, box-shadow .12s;
+}
+#tab-laporan .lap-filter-row select:focus,
+#tab-laporan .lap-filter-row input[type="date"]:focus {
+    outline: none;
+    border-color: #a5b4fc;
+    box-shadow: 0 0 0 3px rgba(79,70,229,.12);
+    background: #fff;
+}
+
+/* Named widths for specific filter dropdowns */
+#tab-laporan .lap-select-platform { min-width: 145px; }
+#tab-laporan .lap-select-periode  { min-width: 135px; }
+
+/* Dynamic period sub-inputs (toggled by JS) */
+#tab-laporan .lap-periode-range,
+#tab-laporan .lap-periode-bulan {
+    display: none;
+    gap: .5rem;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+/* Search box */
+#tab-laporan .lap-search {
+    display: flex;
+    align-items: center;
+    gap: .45rem;
+    border: 1px solid var(--lap-line);
+    border-radius: 9px;
+    padding: 0 .75rem;
+    background: var(--lap-bg);
+    height: 36px;
+    box-sizing: border-box;
+    transition: border-color .12s, box-shadow .12s;
+}
+#tab-laporan .lap-search:focus-within {
+    border-color: #a5b4fc;
+    box-shadow: 0 0 0 3px rgba(79,70,229,.12);
+    background: #fff;
+}
+#tab-laporan .lap-search i {
+    color: #94a3b8;
+    font-size: .95rem;
+    flex-shrink: 0;
+    line-height: 1;
+}
+#tab-laporan .lap-search input {
+    border: none;
+    background: transparent;
+    font-size: .83rem;
+    width: 100%;
+    color: var(--lap-ink);
+    height: 100%;
+    line-height: 1;
+    padding: 0;
+}
+#tab-laporan .lap-search input:focus { outline: none; }
+
+/* Search field wrapper — expands to fill remaining row space */
+#tab-laporan .lap-field-search {
+    flex: 1;
+    min-width: 190px;
+}
+
+/* Filter action buttons wrapper */
+#tab-laporan .lap-filter-actions {
+    display: flex;
+    gap: .45rem;
+    align-items: flex-end;
+}
+#tab-laporan .lap-btn-apply {
+    height: 36px;
+    padding: 0 1rem;
+    border-radius: 9px;
+    background: var(--lap-primary);
+    color: #fff;
+    border: none;
+    font-size: .83rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background .12s, transform .12s;
+}
+#tab-laporan .lap-btn-apply:hover { background: #4338ca; transform: translateY(-1px); }
+#tab-laporan .lap-btn-reset {
+    height: 36px;
+    padding: 0 .85rem;
+    border-radius: 9px;
+    border: 1px solid var(--lap-line);
+    background: var(--lap-surface);
+    color: var(--lap-sub);
+    font-size: .83rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background .12s;
+}
+#tab-laporan .lap-btn-reset:hover { background: var(--lap-bg); color: var(--lap-ink); }
+
+/* ── KPI Summary Cards ───────────────────────────────────────── */
+#tab-laporan .lap-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+#tab-laporan .lap-stat-card {
+    background: var(--lap-surface);
+    border: 1px solid var(--lap-line);
+    border-radius: var(--lap-radius);
+    padding: 1.1rem 1.2rem;
+    display: flex;
+    align-items: flex-start;
+    gap: .9rem;
+    box-shadow: var(--lap-shadow);
+    transition: transform .15s, box-shadow .15s;
+}
+#tab-laporan .lap-stat-card:hover      { transform: translateY(-2px); box-shadow: var(--lap-shadow-hover); }
+#tab-laporan .lap-stat-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.05rem;
+    flex-shrink: 0;
+}
+#tab-laporan .lap-stat-icon.icon-indigo  { background: #eef2ff; color: #4f46e5; }
+#tab-laporan .lap-stat-icon.icon-sky     { background: #e0f2fe; color: #0284c7; }
+#tab-laporan .lap-stat-icon.icon-rose    { background: #ffe4e6; color: #e11d48; }
+#tab-laporan .lap-stat-icon.icon-emerald { background: #d1fae5; color: #059669; }
+#tab-laporan .lap-stat-title {
+    font-size: .67rem;
+    font-weight: 700;
+    color: var(--lap-sub);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    margin-bottom: .3rem;
+}
+#tab-laporan .lap-stat-value {
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: var(--lap-ink);
+    letter-spacing: -.01em;
+    line-height: 1.1;
+}
+
+/* ── Data Table Card ─────────────────────────────────────────── */
+#tab-laporan .lap-table-card {
+    background: var(--lap-bg);
+    border: 1px solid var(--lap-line);
+    border-radius: var(--lap-radius);
+    padding: 1rem;
+    box-shadow: var(--lap-shadow);
+}
+
+/* ── Section Headings (Filter / Sort) ───────────────────────── */
+#tab-laporan .lap-section-heading {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    width: 100%;
+    flex-shrink: 0;
+    font-size: .67rem;
+    font-weight: 700;
+    color: var(--lap-sub);
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    margin-bottom: .8rem;
+}
+#tab-laporan .lap-section-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .8rem;
+    flex-shrink: 0;
+}
+#tab-laporan .lap-section-icon.icon-filter { background: #eef2ff; color: var(--lap-primary); }
+#tab-laporan .lap-section-icon.icon-sort   { background: #eff6ff; color: #2563eb; }
+#tab-laporan .lap-section-divider {
+    flex: 1;
+    height: 1px;
+    background: var(--lap-line);
+    margin-left: .25rem;
+}
+
+/* ── Sort Bar ────────────────────────────────────────────────── */
+#tab-laporan .lap-sort-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: .75rem;
+    padding: .9rem 1.25rem;
+    background: linear-gradient(135deg, #fafbff 0%, #f8fafc 100%);
+    border: 1px solid var(--lap-line);
+    border-radius: var(--lap-radius);
+    margin-bottom: 1.25rem;
+    box-shadow: var(--lap-shadow);
+}
+
+/* Sort identity (left) */
+#tab-laporan .lap-sort-identity {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    flex-shrink: 0;
+}
+#tab-laporan .lap-sort-icon-wrap {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: var(--lap-primary);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .95rem;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(79,70,229,.25);
+}
+#tab-laporan .lap-sort-identity-text {
+    display: flex;
+    flex-direction: column;
+    gap: .05rem;
+}
+#tab-laporan .lap-sort-identity-label {
+    font-size: .65rem;
+    font-weight: 700;
+    color: var(--lap-sub);
+    text-transform: uppercase;
+    letter-spacing: .07em;
+}
+#tab-laporan .lap-sort-identity-value {
+    font-size: .82rem;
+    font-weight: 700;
+    color: var(--lap-ink);
+}
+
+/* Sort grouped control (center) */
+#tab-laporan .lap-sort-group {
+    display: flex;
+    align-items: stretch;
+    border-radius: 10px;
+    border: 1px solid var(--lap-line);
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(15,23,42,.05);
+    background: #fff;
+}
+#tab-laporan .lap-sort-group-label {
+    display: flex;
+    align-items: center;
+    padding: 0 .75rem;
+    background: var(--lap-bg);
+    border-right: 1px solid var(--lap-line);
+    font-size: .7rem;
+    font-weight: 700;
+    color: var(--lap-sub);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    white-space: nowrap;
+    gap: .3rem;
+}
+#tab-laporan .lap-sort-select {
+    height: 38px;
+    padding: 0 2rem 0 .75rem;
+    border: none;
+    background: #fff;
+    font-size: .83rem;
+    color: var(--lap-ink);
+    font-weight: 500;
+    cursor: pointer;
+    min-width: 160px;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%2394a3b8' viewBox='0 0 256 256'%3E%3Cpath d='M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right .65rem center;
+    outline: none;
+    transition: background-color .12s;
+}
+#tab-laporan .lap-sort-select:focus { background-color: #fafbff; }
+
+/* Sort direction toggle */
+#tab-laporan .lap-sort-dir-btn {
+    height: 38px;
+    min-width: 44px;
+    padding: 0 .75rem;
+    border: none;
+    border-left: 1px solid var(--lap-line);
+    background: #fff;
+    color: var(--lap-sub);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .3rem;
+    cursor: pointer;
+    transition: all .15s;
+    flex-shrink: 0;
+    text-decoration: none;
+    white-space: nowrap;
+    font-size: .78rem;
+    font-weight: 600;
+}
+#tab-laporan .lap-sort-dir-btn:hover { background: var(--lap-primary-soft); color: var(--lap-primary); }
+#tab-laporan .lap-sort-dir-btn.asc   { color: #16a34a; background: #f0fdf4; }
+#tab-laporan .lap-sort-dir-btn.desc  { color: #dc2626; background: #fef2f2; }
+
+/* Sort active status pill (right) */
+#tab-laporan .lap-sort-active-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    padding: .3rem .75rem;
+    border-radius: 999px;
+    background: var(--lap-primary-soft);
+    color: var(--lap-primary);
+    font-size: .74rem;
+    font-weight: 700;
+    border: 1px solid #c7d2fe;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+#tab-laporan .lap-sort-dir-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--lap-primary);
+    display: inline-block;
+}
+
+/* ── Content Card List ───────────────────────────────────────── */
+#tab-laporan .lap-list { display: flex; flex-direction: column; gap: .8rem; }
+#tab-laporan .lap-row-card {
+    background: #fff;
+    border: 1px solid var(--lap-line);
+    border-radius: var(--lap-radius);
+    padding: 1.2rem 1.4rem;
+    box-shadow: var(--lap-shadow);
+    transition: transform .18s, box-shadow .18s, border-color .18s;
+}
+#tab-laporan .lap-row-card:hover { transform: translateY(-2px); box-shadow: var(--lap-shadow-hover); border-color: #dce1ea; }
+
+/* Card meta row */
+#tab-laporan .lap-row-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .55rem;
+    margin-bottom: .65rem;
+    justify-content: space-between;
+}
+#tab-laporan .lap-row-meta-left  { display: flex; flex-wrap: wrap; align-items: center; gap: .55rem; }
+#tab-laporan .lap-plat-badge {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .82rem;
+    flex-shrink: 0;
+}
+#tab-laporan .lap-plat-name   { font-weight: 600; font-size: .82rem; color: var(--lap-ink); }
+#tab-laporan .lap-dot         { width: 3px; height: 3px; border-radius: 50%; background: #cbd5e1; }
+#tab-laporan .lap-row-date    { display: inline-flex; align-items: center; gap: .3rem; font-size: .76rem; color: var(--lap-sub); font-weight: 500; }
+#tab-laporan .lap-row-date i  { font-size: .9rem; color: #94a3b8; }
+#tab-laporan .lap-pill        { display: inline-block; background: #f1f5f9; color: #475569; padding: .18rem .6rem; border-radius: 999px; font-size: .68rem; font-weight: 600; white-space: nowrap; }
+#tab-laporan .lap-cat-pill    { display: inline-block; background: var(--lap-primary-soft); color: var(--lap-primary); padding: .18rem .6rem; border-radius: 999px; font-size: .68rem; font-weight: 600; white-space: nowrap; }
+
+/* Card title */
+#tab-laporan .lap-row-title {
+    font-weight: 700;
+    color: var(--lap-ink);
+    font-size: .98rem;
+    margin-bottom: .9rem;
+    word-break: break-word;
+    line-height: 1.4;
+}
+
+/* ── Metric Grid ─────────────────────────────────────────────── */
+#tab-laporan .lap-metrics {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: .55rem;
+    padding-top: .9rem;
+    border-top: 1px solid var(--lap-line);
+    margin-bottom: .9rem;
+}
+#tab-laporan .lap-metric-tile {
+    background: var(--lap-bg);
+    border-radius: 10px;
+    padding: .5rem .65rem;
+}
+#tab-laporan .lap-metric-label {
+    font-size: .61rem;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    margin-bottom: .2rem;
+}
+#tab-laporan .lap-metric-value {
+    font-size: .95rem;
+    font-weight: 700;
+    color: var(--lap-ink);
+    font-variant-numeric: tabular-nums;
+}
+#tab-laporan .lap-er-pill      { display: inline-block; padding: .1rem .5rem; border-radius: 999px; font-weight: 700; font-size: .8rem; background: #e2e8f0; color: #475569; }
+#tab-laporan .lap-er-pill.good { background: #dcfce7; color: #15803d; }
+
+/* ── Link Row ────────────────────────────────────────────────── */
+#tab-laporan .lap-link-row { display: flex; align-items: center; gap: .5rem; }
+#tab-laporan .lap-link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    padding: .3rem .8rem;
+    border-radius: 8px;
+    background: var(--lap-primary-soft);
+    color: var(--lap-primary);
+    font-size: .78rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid #c7d2fe;
+    transition: background .12s, transform .12s;
+}
+#tab-laporan .lap-link-btn:hover { background: #ddd6fe; transform: translateY(-1px); }
+#tab-laporan .lap-no-link { font-size: .76rem; color: #94a3b8; font-style: italic; }
+
+/* ── Empty State ─────────────────────────────────────────────── */
+#tab-laporan .lap-empty {
+    text-align: center;
+    padding: 3.5rem 1rem;
+    color: var(--lap-sub);
+    background: #fff;
+    border: 1.5px dashed var(--lap-line);
+    border-radius: var(--lap-radius);
+}
+#tab-laporan .lap-empty i { font-size: 2.5rem; display: block; margin-bottom: .85rem; color: #cbd5e1; }
+#tab-laporan .lap-empty p { margin: 0 0 1.1rem; font-size: .88rem; }
+#tab-laporan .lap-empty .lap-btn-reset { margin: 0 auto; }
+
+/* ── Skeleton Loading ────────────────────────────────────────── */
+@keyframes lap-shimmer {
+    0%   { background-position: -600px 0; }
+    100% { background-position:  600px 0; }
+}
+#tab-laporan .lap-skeleton {
+    background: linear-gradient(90deg, #e8ecf0 25%, #f1f5f9 50%, #e8ecf0 75%);
+    background-size: 1200px 100%;
+    animation: lap-shimmer 1.5s infinite linear;
+    border-radius: 8px;
+}
+#tab-laporan .lap-skeleton-card {
+    background: #fff;
+    border: 1px solid var(--lap-line);
+    border-radius: var(--lap-radius);
+    padding: 1.2rem 1.4rem;
+    box-shadow: var(--lap-shadow);
+    margin-bottom: .8rem;
+}
+
+/* ── Pagination ──────────────────────────────────────────────── */
+#tab-laporan .lap-pagination {
+    margin-top: .85rem;
+    padding: .8rem 1.1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: .6rem;
+    background: #fff;
+    border: 1px solid var(--lap-line);
+    border-radius: 12px;
+    font-size: .8rem;
+    color: var(--lap-sub);
+}
+#tab-laporan .lap-pagination b { color: var(--lap-ink); }
+#tab-laporan .lap-page-nav     { display: flex; gap: .45rem; align-items: center; }
+#tab-laporan .lap-page-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: .3rem .8rem;
+    font-size: .76rem;
+    font-weight: 600;
+    border-radius: 8px;
+    border: 1px solid var(--lap-line);
+    text-decoration: none;
+    color: var(--lap-ink);
+    background: #fff;
+    transition: background .12s;
+}
+#tab-laporan .lap-page-btn:hover     { background: var(--lap-bg); }
+#tab-laporan .lap-page-btn[disabled] { opacity: .45; cursor: not-allowed; pointer-events: none; }
+#tab-laporan .lap-page-current       { font-weight: 700; color: var(--lap-ink); padding: 0 .3rem; }
+
+/* ── Responsive Breakpoints ──────────────────────────────────── */
+@media (max-width: 1100px) {
+    #tab-laporan .lap-metrics { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 960px) {
+    #tab-laporan .lap-stats { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+    #tab-laporan .lap-sort-bar         { padding: .85rem 1rem; flex-direction: column; align-items: flex-start; }
+    #tab-laporan .lap-sort-group       { width: 100%; }
+    #tab-laporan .lap-sort-select      { flex: 1; min-width: 0; }
+    #tab-laporan .lap-sort-active-pill { align-self: flex-start; }
+}
+@media (max-width: 640px) {
+    #tab-laporan .lap-stats               { grid-template-columns: 1fr; }
+    #tab-laporan .lap-metrics             { grid-template-columns: repeat(2, 1fr); }
+    #tab-laporan .lap-filter-card         { padding: .85rem 1rem; }
+    #tab-laporan .lap-sort-identity-value { display: none; }
+}

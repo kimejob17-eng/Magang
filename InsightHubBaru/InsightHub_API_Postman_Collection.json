@@ -1,0 +1,792 @@
+{
+	"info": {
+		"name": "InsightHub API",
+		"description": "Koleksi API untuk proyek InsightHub menggunakan autentikasi Laravel Sanctum (Token Bearer).",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "1. Login API",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.access_token) {",
+									"        pm.collectionVariables.set(\"token\", jsonData.access_token);",
+									"        console.log(\"Token otomatis disimpan: \" + jsonData.access_token);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"password\",\n    \"role\": \"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						},
+						"description": "Endpoint untuk masuk ke sistem dan memperbarui token."
+					},
+					"response": []
+				},
+				{
+					"name": "2. Logout API",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"logout"
+							]
+						},
+						"description": "Menghapus token yang sedang digunakan untuk request ini."
+					},
+					"response": []
+				},
+				{
+					"name": "3. Change Password API",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"current_password\": \"password\",\n    \"password\": \"newpassword123\",\n    \"password_confirmation\": \"newpassword123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/change-password",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"change-password"
+							]
+						},
+						"description": "Mengganti password pengguna."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Dashboard Ringkasan",
+			"item": [
+				{
+					"name": "1. Get Ringkasan",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/dashboard/ringkasan?ringkasan_platform=Semua Platform&ringkasan_periode=semua",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"dashboard",
+								"ringkasan"
+							],
+							"query": [
+								{
+									"key": "ringkasan_platform",
+									"value": "Semua Platform"
+								},
+								{
+									"key": "ringkasan_periode",
+									"value": "semua"
+								}
+							]
+						},
+						"description": "Mendapatkan metrik ringkasan."
+					},
+					"response": []
+				},
+				{
+					"name": "2. Get Konten Terbaru",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/dashboard/ringkasan/konten-terbaru",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"dashboard",
+								"ringkasan",
+								"konten-terbaru"
+							]
+						},
+						"description": "Mendapatkan 5 konten terbaru."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Kategori",
+			"item": [
+				{
+					"name": "1. List Kategori",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/kategori",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"kategori"
+							]
+						},
+						"description": "Mendapatkan semua kategori."
+					},
+					"response": []
+				},
+				{
+					"name": "2. Create Kategori",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nama_kategori\": \"Vlog\",\n    \"platform_id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/kategori",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"kategori"
+							]
+						},
+						"description": "Membuat kategori baru."
+					},
+					"response": []
+				},
+				{
+					"name": "3. Update Kategori",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nama_kategori\": \"Vlog Baru\",\n    \"platform_id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/kategori/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"kategori",
+								"1"
+							]
+						},
+						"description": "Memperbarui kategori."
+					},
+					"response": []
+				},
+				{
+					"name": "4. Delete Kategori",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/kategori/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"kategori",
+								"1"
+							]
+						},
+						"description": "Menghapus kategori."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Platform",
+			"item": [
+				{
+					"name": "1. List Platform",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/platform",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"platform"
+							]
+						},
+						"description": "Mendapatkan semua platform."
+					},
+					"response": []
+				},
+				{
+					"name": "2. Update Platform",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"is_aktif\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/platform/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"platform",
+								"1"
+							]
+						},
+						"description": "Update status aktif platform."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Input Metrics",
+			"item": [
+				{
+					"name": "Input Instagram",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Postingan IG\",\n    \"category\": \"Kategori Bebas\",\n    \"publish_date\": \"2023-10-10\",\n    \"content_type\": \"Feed Post\",\n    \"url\": \"https://instagram.com/p/xxx\",\n    \"views\": \"1500\",\n    \"interactions\": \"200\",\n    \"like\": \"150\",\n    \"comment\": \"30\",\n    \"share\": \"20\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/dashboard/input/instagram",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"dashboard",
+								"input",
+								"instagram"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Input Facebook",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Postingan FB\",\n    \"category\": \"Kategori Bebas\",\n    \"publish_date\": \"2023-10-10\",\n    \"content_type\": \"Image Post\",\n    \"url\": \"https://facebook.com/xxx\",\n    \"views\": \"1000\",\n    \"interactions\": \"100\",\n    \"like\": \"50\",\n    \"comment\": \"30\",\n    \"share\": \"20\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/dashboard/input/facebook",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"dashboard",
+								"input",
+								"facebook"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Input TikTok",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Video TikTok\",\n    \"category\": \"Kategori Bebas\",\n    \"publish_date\": \"2023-10-10\",\n    \"content_type\": \"Short Video\",\n    \"url\": \"https://tiktok.com/@user/video/xxx\",\n    \"views\": \"2500\",\n    \"interactions\": \"500\",\n    \"like\": \"300\",\n    \"comment\": \"100\",\n    \"share\": \"100\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/dashboard/input/tiktok",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"dashboard",
+								"input",
+								"tiktok"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Input YouTube Video",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"YouTube Video\",\n    \"category\": \"Kategori Bebas\",\n    \"publish_date\": \"2023-10-10\",\n    \"url\": \"https://youtube.com/watch?v=xxx\",\n    \"views\": \"5000\",\n    \"like\": \"400\",\n    \"comment\": \"50\",\n    \"share\": \"30\",\n    \"subscribers\": \"10\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/dashboard/input/youtube/video",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"dashboard",
+								"input",
+								"youtube",
+								"video"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Input YouTube Shorts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"YouTube Shorts\",\n    \"category\": \"Kategori Bebas\",\n    \"publish_date\": \"2023-10-10\",\n    \"url\": \"https://youtube.com/shorts/xxx\",\n    \"views\": \"5000\",\n    \"like\": \"400\",\n    \"comment\": \"50\",\n    \"share\": \"30\",\n    \"subscribers\": \"10\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/dashboard/input/youtube/shorts",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"dashboard",
+								"input",
+								"youtube",
+								"shorts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Input YouTube Live",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"YouTube Live\",\n    \"category\": \"Kategori Bebas\",\n    \"publish_date\": \"2023-10-10\",\n    \"url\": \"https://youtube.com/watch?v=xxx\",\n    \"views\": \"5000\",\n    \"like\": \"400\",\n    \"comment\": \"50\",\n    \"share\": \"30\",\n    \"subscribers\": \"10\",\n    \"peak_viewers\": \"100\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/dashboard/input/youtube/live",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"dashboard",
+								"input",
+								"youtube",
+								"live"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
