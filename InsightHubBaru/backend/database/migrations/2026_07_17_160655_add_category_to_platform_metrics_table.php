@@ -12,7 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('platform_metrics', function (Blueprint $table) {
-            $table->string('category')->nullable()->after('platform');
+            if (!Schema::hasColumn('platform_metrics', 'category')) {
+                $afterCol = Schema::hasColumn('platform_metrics', 'platform') ? 'platform' : (Schema::hasColumn('platform_metrics', 'platform_name') ? 'platform_name' : null);
+                if ($afterCol) {
+                    $table->string('category')->nullable()->after($afterCol);
+                } else {
+                    $table->string('category')->nullable();
+                }
+            }
         });
     }
 
