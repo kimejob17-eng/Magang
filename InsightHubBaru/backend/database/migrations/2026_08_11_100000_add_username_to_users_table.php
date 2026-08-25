@@ -14,25 +14,23 @@ return new class extends Migration
             $table->string('username')->nullable()->after('name');
         });
 
-        // 2. Isi username berdasarkan email sebelum '@' (Sintaks SQL Server)
+        // 2. Isi username berdasarkan email sebelum '@' (Sintaks MySQL)
         DB::statement("
             UPDATE users 
-            SET username = SUBSTRING(email, 1, CHARINDEX('@', email) - 1) 
-            WHERE username IS NULL AND CHARINDEX('@', email) > 0
+            SET username = SUBSTRING_INDEX(email, '@', 1) 
+            WHERE username IS NULL AND INSTR(email, '@') > 0
         ");
 
-        // 3. Pastikan username unique. Handle duplikasi menggunakan CTE (SQL Server)
+        // 3. Pastikan username unique. Handle duplikasi (Sintaks MySQL)
         DB::statement("
-            WITH CTE AS (
+            UPDATE users u
+            INNER JOIN (
                 SELECT id, username,
                        ROW_NUMBER() OVER(PARTITION BY username ORDER BY id) as rn
                 FROM users
                 WHERE username IS NOT NULL
-            )
-            UPDATE u 
-            SET u.username = c.username + CAST(c.rn AS VARCHAR(10))
-            FROM users u
-            INNER JOIN CTE c ON u.id = c.id
+            ) c ON u.id = c.id
+            SET u.username = CONCAT(c.username, c.rn)
             WHERE c.rn > 1
         ");
 
