@@ -175,19 +175,7 @@
 
 
 
-        <!-- Role (UI Only) -->
-        <div class="form-group">
-            <label for="roleSelector" class="form-label">Role</label>
-            <div class="input-wrap">
-                <i class="ph ph-users input-icon"></i>
-                <select id="roleSelector" class="form-input" style="padding-left: 36px; appearance: auto; cursor: pointer;">
-                    <option value="" disabled selected>-- Pilih Role --</option>
-                    <option value="superadmin">Super Admin</option>
-                    <option value="admin">Admin</option>
-                    <option value="user">User</option>
-                </select>
-            </div>
-        </div>
+
 
         <!-- Username -->
         <div class="form-group @error('username') has-error @enderror">

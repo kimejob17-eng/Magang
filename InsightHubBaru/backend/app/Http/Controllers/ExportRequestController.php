@@ -25,6 +25,16 @@ class ExportRequestController extends Controller
         $exportSource = $validated['export_source']
             ?? ($validated['filters']['export_source'] ?? 'laporan');
 
+        if ($validated['type'] === 'excel' && !auth()->user()->hasPermission('laporan.export-excel', 'view')) {
+            abort(403, 'Anda tidak memiliki izin untuk mengekspor data Excel.');
+        }
+        if ($validated['type'] === 'pdf' && $exportSource === 'laporan' && !auth()->user()->hasPermission('laporan.export-pdf', 'view')) {
+            abort(403, 'Anda tidak memiliki izin untuk mengekspor data PDF.');
+        }
+        if ($validated['type'] === 'pdf' && $exportSource === 'ringkasan' && !auth()->user()->hasPermission('ringkasan.lihat', 'view')) {
+            abort(403, 'Anda tidak memiliki izin untuk mengekspor Ringkasan PDF.');
+        }
+
         // Validasi dan bersihkan data chart Base64 (hanya untuk export Ringkasan)
         $filters = $validated['filters'] ?? [];
         if ($exportSource === 'ringkasan') {

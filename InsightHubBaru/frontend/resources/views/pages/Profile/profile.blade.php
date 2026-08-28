@@ -17,66 +17,8 @@
     <!-- ═══════════════════════════════
          TOP NAVIGATION BAR
     ════════════════════════════════ -->
-    <header class="topnav">
-        <!-- Brand -->
-        <a href="{{ url('/') }}" class="topnav-brand" style="text-decoration:none; display:flex; align-items:center; padding-left: 0.5rem; flex-shrink: 0;" title="Kembali ke Beranda">
-            <div style="width: 180px; height: 52px; overflow: hidden; position: relative;">
-                <img src="{{ asset('assets/logo-kemendag.png') }}"
-                     alt="Kementerian Perdagangan"
-                     style="width: 195px !important; height: auto !important; max-width: none !important; position: absolute; top: 50%; left: -20px; transform: translateY(-50%); display: block; padding: 0; margin: 0;">
-            </div>
-        </a>
-
-        <!-- Nav Links -->
-        <nav class="topnav-links">
-            <a class="topnav-item" href="{{ route('dashboard') }}">Ringkasan</a>
-            <a class="topnav-item" href="{{ route('dashboard') }}?tab=analitik">Analitik Konten</a>
-            
-            @if(auth()->check() && in_array(auth()->user()->role, ['super-admin', 'admin']))
-            <a class="topnav-item" href="{{ route('dashboard') }}?tab=input">Input Data</a>
-            @endif
-            
-            <a class="topnav-item" href="{{ route('dashboard') }}?tab=laporan">Laporan</a>
-            
-            @if(auth()->check() && in_array(auth()->user()->role, ['super-admin', 'admin']))
-            <a class="topnav-item {{ request()->routeIs('pengguna.index') ? 'active' : '' }}" href="{{ route('pengguna.index') }}">Manajemen Data Pengguna</a>
-            @endif
-            
-            <a class="topnav-item active" href="{{ route('profile.show') }}">Profil</a>
-        </nav>
-
-        <!-- Right -->
-        <div class="topnav-right">
-            <div class="topnav-user-group">
-                <a href="{{ route('profile.show') }}" class="topnav-avatar-link" title="{{ auth()->user()->name }}">
-                    @php
-                        $hasAvatar = auth()->user()->avatar && file_exists(public_path(auth()->user()->avatar));
-                        $nameParts = explode(' ', trim(auth()->user()->name));
-                        $initials = count($nameParts) > 1 
-                            ? strtoupper(substr($nameParts[0], 0, 1) . substr($nameParts[1], 0, 1))
-                            : strtoupper(substr(auth()->user()->name, 0, 2));
-                    @endphp
-                    @if($hasAvatar)
-                    <img src="{{ asset(auth()->user()->avatar) }}" alt="{{ auth()->user()->name }}" class="topnav-avatar-img" id="topbar-avatar">
-                @else
-                    <div class="topnav-avatar-initials" id="topbar-avatar-initials">
-                        {{ $initials }}
-                    </div>
-                    <img src="" alt="{{ auth()->user()->name }}" class="topnav-avatar-img" id="topbar-avatar" style="display: none;">
-                @endif
-                </a>
-                <button class="topnav-logout-btn"
-                        onclick="event.preventDefault(); document.getElementById('topnav-logout-form').submit();"
-                        title="Logout">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-                    <span>Logout</span>
-                </button>
-                <form id="topnav-logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">
-                    @csrf
-                </form>
-            </div>
-        </div>
-    </header>
+    <!-- Top Navigation Bar -->
+    @include('layouts.navbar')
 
     <!-- ═══════════════════════════════
          MAIN CONTENT
@@ -95,6 +37,10 @@
                     <div class="hero-avatar" onclick="document.getElementById('pf-avatar-input').click()" style="cursor: pointer;" title="Ubah Foto Profil">
                         @php
                             $hasProfileAvatar = $user->avatar && file_exists(public_path($user->avatar));
+                            $nameParts = explode(' ', trim($user->name));
+                            $initials = count($nameParts) > 1 
+                                ? strtoupper(substr($nameParts[0], 0, 1) . substr($nameParts[1], 0, 1))
+                                : strtoupper(substr($user->name, 0, 2));
                         @endphp
                         @if($hasProfileAvatar)
                             <img

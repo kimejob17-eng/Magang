@@ -759,6 +759,10 @@ class DashboardController extends Controller
 
     public function exportExcel(Request $request)
     {
+        if (auth()->check() && !auth()->user()->hasPermission('laporan.export-excel', 'view')) {
+            abort(403, 'Akses tidak diizinkan atau Anda tidak memiliki izin untuk mengekspor Excel.');
+        }
+
         if (auth()->check() && auth()->user()->role === 'user') {
             abort(403, 'Akses langsung tidak diizinkan. Gunakan fitur Permintaan Export.');
         }
@@ -781,6 +785,10 @@ class DashboardController extends Controller
 
     public function exportPdf(Request $request)
     {
+        if (auth()->check() && !auth()->user()->hasPermission('laporan.export-pdf', 'view')) {
+            abort(403, 'Akses tidak diizinkan atau Anda tidak memiliki izin untuk mengekspor PDF.');
+        }
+
         if (auth()->check() && auth()->user()->role === 'user') {
             abort(403, 'Akses langsung tidak diizinkan. Gunakan fitur Permintaan Export.');
         }
@@ -808,6 +816,10 @@ class DashboardController extends Controller
 
     public function exportRingkasanPdf(Request $request)
     {
+        if (auth()->check() && !auth()->user()->hasPermission('ringkasan.lihat', 'view')) {
+            abort(403, 'Akses tidak diizinkan atau Anda tidak memiliki izin untuk mengekspor Ringkasan PDF.');
+        }
+
         if (auth()->check() && auth()->user()->role === 'user') {
             abort(403, 'Akses langsung tidak diizinkan. Gunakan fitur Permintaan Export.');
         }

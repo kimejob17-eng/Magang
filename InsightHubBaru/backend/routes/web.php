@@ -48,8 +48,7 @@ Route::middleware('auth')->group(function () {
 
         // Dashboard
         Route::get('/dashboard', [DashboardController::class, 'index'])
-            ->name('dashboard')
-            ->middleware(\App\Http\Middleware\CheckPermission::class.':ringkasan.lihat,view');
+            ->name('dashboard');
 
         Route::post('/dashboard/metrics', [DashboardController::class, 'storeMetric'])->name('dashboard.metrics.store');
         
@@ -116,6 +115,17 @@ Route::middleware('auth')->group(function () {
         Route::delete('/pengguna/{id}', [\App\Http\Controllers\ManajemenPenggunaController::class, 'destroy'])
             ->name('pengguna.destroy')
             ->middleware(\App\Http\Middleware\CheckPermission::class.':manajemen-pengguna.hapus,delete');
+
+        // Role Mapping
+        Route::get('/role-mapping', [\App\Http\Controllers\RoleMappingController::class, 'index'])
+            ->name('role-mapping.index')
+            ->middleware(\App\Http\Middleware\CheckPermission::class.':manajemen-akses.kelola-role,view');
+        Route::post('/role-mapping', [\App\Http\Controllers\RoleMappingController::class, 'update'])
+            ->name('role-mapping.update')
+            ->middleware(\App\Http\Middleware\CheckPermission::class.':manajemen-akses.kelola-role,edit');
+        Route::post('/role-mapping/reset', [\App\Http\Controllers\RoleMappingController::class, 'reset'])
+            ->name('role-mapping.reset')
+            ->middleware(\App\Http\Middleware\CheckPermission::class.':manajemen-akses.kelola-role,edit');
 
         // Master Data - Platform (read-only: 4 platform sudah di-seed lewat SQL,
         // halaman ini cuma utk lihat/toggle is_aktif, bukan CRUD penuh)

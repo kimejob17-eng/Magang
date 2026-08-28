@@ -17,7 +17,8 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Memastikan akun testing (development only) tersedia.
-        
+        $this->call(RolePermissionSeeder::class);
+
         $roles = \App\Models\Auth\Role::all()->keyBy('slug');
 
         // Akun Super Admin

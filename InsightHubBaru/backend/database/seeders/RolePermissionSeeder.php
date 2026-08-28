@@ -48,7 +48,7 @@ class RolePermissionSeeder extends Seeder
             ['name' => 'Input Data', 'slug' => 'input-data', 'urutan' => 3],
             ['name' => 'Laporan', 'slug' => 'laporan', 'urutan' => 4],
             ['name' => 'Profil', 'slug' => 'profil', 'urutan' => 5],
-            ['name' => 'Manajemen Karyawan', 'slug' => 'manajemen-karyawan', 'urutan' => 6],
+            ['name' => 'Manajemen Pengguna', 'slug' => 'manajemen-pengguna', 'urutan' => 6],
             ['name' => 'Manajemen Akses', 'slug' => 'manajemen-akses', 'urutan' => 7],
             ['name' => 'Aktivitas Pengguna', 'slug' => 'aktivitas-pengguna', 'urutan' => 8],
         ];
@@ -90,16 +90,16 @@ class RolePermissionSeeder extends Seeder
                 ['name' => 'Edit Profil', 'slug' => 'profil.edit', 'urutan' => 2, 'perms' => ['edit' => ['super-admin', 'admin', 'user']]],
                 ['name' => 'Ubah Password', 'slug' => 'profil.ubah-password', 'urutan' => 3, 'perms' => ['edit' => ['super-admin', 'admin', 'user']]],
             ],
-            'manajemen-karyawan' => [
-                ['name' => 'Lihat Karyawan', 'slug' => 'manajemen-karyawan.lihat', 'urutan' => 1, 'perms' => ['view' => ['super-admin', 'admin']]],
+            'manajemen-pengguna' => [
+                ['name' => 'Lihat Pengguna', 'slug' => 'manajemen-pengguna.lihat', 'urutan' => 1, 'perms' => ['view' => ['super-admin', 'admin']]],
                 // Eksklusif Super Admin untuk membuat Admin
-                ['name' => 'Tambah Karyawan (Admin)', 'slug' => 'manajemen-karyawan.tambah', 'urutan' => 2, 'perms' => ['create' => ['super-admin']]],
-                ['name' => 'Edit Data Karyawan', 'slug' => 'manajemen-karyawan.edit', 'urutan' => 3, 'perms' => ['edit' => ['super-admin', 'admin']]],
-                ['name' => 'Nonaktifkan Karyawan', 'slug' => 'manajemen-karyawan.nonaktifkan', 'urutan' => 4, 'perms' => ['edit' => ['super-admin', 'admin']]],
-                ['name' => 'Hapus Akun Karyawan', 'slug' => 'manajemen-karyawan.hapus', 'urutan' => 5, 'perms' => ['delete' => ['super-admin', 'admin']]],
-                ['name' => 'Reset Password Karyawan', 'slug' => 'manajemen-karyawan.reset-password', 'urutan' => 6, 'perms' => ['edit' => ['super-admin', 'admin']]],
+                ['name' => 'Tambah Pengguna (Admin)', 'slug' => 'manajemen-pengguna.tambah', 'urutan' => 2, 'perms' => ['create' => ['super-admin']]],
+                ['name' => 'Edit Data Pengguna', 'slug' => 'manajemen-pengguna.edit', 'urutan' => 3, 'perms' => ['edit' => ['super-admin', 'admin']]],
+                ['name' => 'Nonaktifkan Pengguna', 'slug' => 'manajemen-pengguna.nonaktifkan', 'urutan' => 4, 'perms' => ['edit' => ['super-admin', 'admin']]],
+                ['name' => 'Hapus Akun Pengguna', 'slug' => 'manajemen-pengguna.hapus', 'urutan' => 5, 'perms' => ['delete' => ['super-admin', 'admin']]],
+                ['name' => 'Reset Password Pengguna', 'slug' => 'manajemen-pengguna.reset-password', 'urutan' => 6, 'perms' => ['edit' => ['super-admin', 'admin']]],
                 // Admin dapat membuat User
-                ['name' => 'Tambah Karyawan (User)', 'slug' => 'manajemen-karyawan.tambah-user', 'urutan' => 7, 'perms' => ['create' => ['super-admin', 'admin']]],
+                ['name' => 'Tambah Pengguna (User)', 'slug' => 'manajemen-pengguna.tambah-user', 'urutan' => 7, 'perms' => ['create' => ['super-admin', 'admin']]],
             ],
             'manajemen-akses' => [
                 ['name' => 'Kelola Role', 'slug' => 'manajemen-akses.kelola-role', 'urutan' => 1, 'perms' => ['view' => ['super-admin'], 'create' => ['super-admin'], 'edit' => ['super-admin'], 'delete' => ['super-admin']]],

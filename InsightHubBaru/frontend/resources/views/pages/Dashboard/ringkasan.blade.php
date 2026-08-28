@@ -84,13 +84,17 @@
             </form>
 
             @if(auth()->check() && auth()->user()->role === 'user')
+                @if(auth()->user()->hasPermission('ringkasan.lihat', 'view'))
                 <button type="button" onclick="openExportRingkasanModal()" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap; padding: 0.5rem 1rem; border-radius: 2rem; border: none; background: #ef4444; color: #fff; font-weight: 500; font-size: 0.85rem; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05); text-decoration: none; outline: none;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M9 15h6"></path><path d="M9 11h6"></path></svg> Export PDF
                 </button>
+                @endif
             @elseif(auth()->check() && in_array(auth()->user()->role, ['super-admin', 'admin']))
+                @if(auth()->user()->hasPermission('ringkasan.lihat', 'view'))
                 <a href="{{ route('dashboard.export.ringkasan.pdf', request()->all()) }}" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap; padding: 0.5rem 1rem; border-radius: 2rem; border: none; background: #ef4444; color: #fff; font-weight: 500; font-size: 0.85rem; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05); text-decoration: none; outline: none;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M9 15h6"></path><path d="M9 11h6"></path></svg> Export PDF
                 </a>
+                @endif
             @endif
         </div>
     </div>

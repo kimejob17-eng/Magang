@@ -19,22 +19,30 @@
                     <button type="button" onclick="openHistoryModal()" class="lap-btn-export" style="background:#475569; color:#fff; border-color:#475569;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> Riwayat
                     </button>
+                    @if(auth()->user()->hasPermission('laporan.export-excel', 'view'))
                     <button type="button" onclick="openExportModal('excel')" class="lap-btn-export lap-btn-excel">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M8 13h2v2H8z"></path><path d="M14 13h2v2H14z"></path><path d="M8 17h2v2H8z"></path><path d="M14 17h2v2H14z"></path></svg> Export Excel
                     </button>
+                    @endif
+                    @if(auth()->user()->hasPermission('laporan.export-pdf', 'view'))
                     <button type="button" onclick="openExportModal('pdf')" class="lap-btn-export lap-btn-pdf">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M9 15h6"></path><path d="M9 11h6"></path></svg> Export PDF
                     </button>
+                    @endif
                 @else
                     <button type="button" onclick="openHistoryModal()" class="lap-btn-export" style="background:#475569; color:#fff; border-color:#475569;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> Riwayat
                     </button>
+                    @if(auth()->user()->hasPermission('laporan.export-excel', 'view'))
                     <a href="{{ route('dashboard.export.excel', request()->all()) }}" class="lap-btn-export lap-btn-excel">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M8 13h2v2H8z"></path><path d="M14 13h2v2H14z"></path><path d="M8 17h2v2H8z"></path><path d="M14 17h2v2H14z"></path></svg> Export Excel
                     </a>
+                    @endif
+                    @if(auth()->user()->hasPermission('laporan.export-pdf', 'view'))
                     <a href="{{ route('dashboard.export.pdf', request()->all()) }}" class="lap-btn-export lap-btn-pdf">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M9 15h6"></path><path d="M9 11h6"></path></svg> Export PDF
                     </a>
+                    @endif
                 @endif
             </div>
         </div>
@@ -504,8 +512,6 @@ function closeExportModal() {
 @endif
 
 @if(auth()->check() && in_array(auth()->user()->role, ['super-admin', 'admin']))
-    @include('pages.Export.approval')
-    @include('pages.Export.history')
     @if($exportRequests->where('status', 'pending')->count() > 0)
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -515,8 +521,6 @@ function closeExportModal() {
         });
     </script>
     @endif
-@elseif(auth()->check() && auth()->user()->role === 'user')
-    @include('pages.Export.history')
 @endif
 
 <script>

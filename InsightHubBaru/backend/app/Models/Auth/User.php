@@ -34,4 +34,22 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class, 'role_id');
     }
+
+    public function hasPermission(string $menuDetailSlug, string $permissionSlug = 'view'): bool
+    {
+        if (!$this->role_id) {
+            return false;
+        }
+
+        // Jika user adalah Super Admin, pastikan dia tetap mengikuti seeder tetapi
+        // kita izinkan memiliki semua akses jika data mapping diset
+        return $this->roleModel->permissions()
+            ->whereHas('menuDetail', function ($query) use ($menuDetailSlug) {
+                $query->where('slug', $menuDetailSlug);
+            })
+            ->whereHas('permission', function ($query) use ($permissionSlug) {
+                $query->where('slug', $permissionSlug);
+            })
+            ->exists();
+    }
 }
